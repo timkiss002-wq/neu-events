@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hồ sơ sự kiện – NEU Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="/img/favicon-neu.png" type="image/png">
+<link rel="stylesheet" href="/css/app.css">
+<style>
+  /* ===== Bổ sung khi nối dữ liệu ===== */
+  .crumbs a:hover { color: var(--blue); }
+  .form-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 18px; align-items: start; }
+  .form-layout .col { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+  .stack { display: flex; flex-direction: column; gap: 14px; margin-top: 16px; }
+  .agenda-edit { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  .ag-row { display: grid; grid-template-columns: 130px 1fr 1fr 30px; gap: 8px; align-items: center; }
+  .ag-row button { width: 30px; height: 30px; border-radius: 7px; color: var(--muted); display: grid; place-items: center; }
+  .ag-row button:hover { background: #fdeeee; color: #c23a3a; }
+  .ag-row button svg { width: 14px; height: 14px; }
+  input[type=file] { font: inherit; font-size: 15px; color: var(--text); }
+  .cover-prev { height: 100px; border-radius: 8px; background: center / cover no-repeat, linear-gradient(135deg, #cfd9ea, #9fb3d4); margin: 14px 0 10px; }
+  .form-actions { display: flex; flex-direction: column; gap: 8px; }
+  .form-actions > * { width: 100%; }
+  .sticky { position: sticky; top: calc(var(--header-h) + 16px); }
+  .ex-file { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 7px; font-size: 14.5px; margin-bottom: 8px; }
+  .ex-file.rm { opacity: .45; text-decoration: line-through; }
+  .inp.invalid { border-color: #e5484d; }
+  @media (max-width: 960px) { .form-layout { grid-template-columns: 1fr; } .sticky { position: static; } }
+  @media (max-width: 600px) { .ag-row { grid-template-columns: 1fr 30px; } .ag-row input:nth-child(2), .ag-row input:nth-child(3) { grid-column: 1; } }
+</style>
+<link rel="stylesheet" href="/css/ui.css">
+<link rel="stylesheet" href="/css/enhance.css">
+</head>
+<body>
+
+<!-- Sidebar & header được dựng bởi /js/app.js theo tài khoản đăng nhập -->
+<aside class="sidebar" aria-label="Điều hướng chính"></aside>
+<div class="scrim" id="scrim"></div>
+<header class="header"></header>
+
+<div class="main">
+  <main class="container">
+    <div class="crumbs">NEU Events <span>/</span> <a href="/manage-events.html">Quản lý sự kiện</a> <span>/</span> <b id="crumb">Tạo sự kiện</b></div>
+
+    <div class="page-head">
+      <div>
+        <h1 id="heading">Tạo hồ sơ sự kiện</h1>
+        <p>Điền đầy đủ thông tin; hồ sơ sẽ được Đơn vị quản lý kiểm duyệt trước khi công khai.</p>
+      </div>
+    </div>
+
+    <div id="rejectBox"></div>
+
+    <form id="form" class="form-layout" novalidate>
+      <div class="col">
+        <section class="card">
+          <h3>Thông tin chung</h3>
+          <div class="form-grid" style="margin-top:16px">
+            <div class="full"><label class="label">Tên sự kiện <span class="req">*</span></label><input class="inp" name="title" maxlength="200" required placeholder="VD: Ngày hội việc làm NEU 2026"></div>
+            <div class="full"><label class="label">Khẩu hiệu / mô tả ngắn trên banner</label><input class="inp" name="slogan" maxlength="200" placeholder="VD: Kết nối doanh nghiệp • Khám phá cơ hội"></div>
+            <div><label class="label">Loại sự kiện <span class="req">*</span></label><select class="select" name="category_id" style="width:100%" required></select></div>
+            <div><label class="label">Đơn vị tổ chức <span class="req">*</span></label><select class="select" name="unit_id" style="width:100%"></select></div>
+            <div class="full"><label class="label">Tóm tắt (hiển thị trong danh sách)</label><textarea class="inp" name="summary" maxlength="400" style="min-height:60px"></textarea></div>
+            <div class="full"><label class="label">Giới thiệu chi tiết</label><textarea class="inp" name="description" style="min-height:120px" placeholder="Mỗi đoạn một dòng"></textarea></div>
+            <div class="full"><label class="label">Quyền lợi khi tham gia</label><textarea class="inp" name="benefits" placeholder="Mỗi quyền lợi một dòng"></textarea></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-head" style="margin-bottom:0"><div><h3>Chương trình sự kiện</h3><div class="hint">Thêm các mốc thời gian theo thứ tự</div></div>
+            <button type="button" class="btn-outline btn-sm" id="addAgenda">+ Thêm mốc</button></div>
+          <div class="agenda-edit" id="agenda"></div>
+        </section>
+
+        <section class="card">
+          <h3>Chuẩn bị &amp; tài liệu</h3>
+          <div class="form-grid" style="margin-top:16px">
+            <div class="full"><label class="label">Chuẩn bị trước khi tham gia</label><textarea class="inp" name="preparation" placeholder="Mỗi yêu cầu một dòng"></textarea></div>
+            <div class="full">
+              <label class="label">File đính kèm (kế hoạch, dự toán, thể lệ…)</label>
+              <div id="existingFiles"></div>
+              <input type="file" id="files" name="files" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.zip">
+              <div class="help-text">Tối đa 5 file mỗi lần, mỗi file ≤ 10 MB.</div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <aside class="col">
+        <section class="card">
+          <h3>Thời gian &amp; địa điểm</h3>
+          <div class="stack">
+            <div><label class="label">Bắt đầu <span class="req">*</span></label><input class="inp" type="datetime-local" name="start_at" required></div>
+            <div><label class="label">Kết thúc <span class="req">*</span></label><input class="inp" type="datetime-local" name="end_at" required></div>
+            <div><label class="label">Hạn đăng ký <span class="req">*</span></label><input class="inp" type="datetime-local" name="reg_deadline" required></div>
+            <div><label class="label">Địa điểm <span class="req">*</span></label><input class="inp" name="location" required placeholder="VD: Hội trường A2, Đại học NEU"></div>
+          </div>
+        </section>
+        <section class="card">
+          <h3>Quy mô &amp; kinh phí</h3>
+          <div class="stack">
+            <div><label class="label">Số lượng tối đa <span class="req">*</span></label><input class="inp" type="number" min="1" name="capacity" required value="100"></div>
+            <div><label class="label">Phí tham gia</label><input class="inp" name="fee" value="Miễn phí"></div>
+            <div><label class="label">Kinh phí dự kiến (đồng)</label><input class="inp" name="budget" inputmode="numeric" placeholder="0"></div>
+          </div>
+        </section>
+        <section class="card">
+          <h3>Điểm hoạt động</h3>
+          <div class="stack">
+            <div><label class="label">Cấp chương trình <span class="req">*</span></label><select class="inp" name="level"></select></div>
+            <div><label class="label">Điểm hoạt động (điểm Đoàn) khi hoàn thành</label><input class="inp" type="number" min="0" max="20" name="points" value="3">
+              <div class="help-text" style="margin-top:6px;color:var(--muted)">Sinh viên check-in và check-out đầy đủ được cộng điểm sau khi Đơn vị quản lý duyệt danh sách.</div></div>
+          </div>
+        </section>
+        <section class="card">
+          <h3>Người phụ trách</h3>
+          <div class="stack">
+            <div><label class="label">Họ tên <span class="req">*</span></label><input class="inp" name="contact_name" required></div>
+            <div><label class="label">Điện thoại</label><input class="inp" name="contact_phone"></div>
+            <div><label class="label">Email</label><input class="inp" type="email" name="contact_email"></div>
+          </div>
+        </section>
+        <section class="card">
+          <h3>Ảnh bìa</h3>
+          <div class="cover-prev" id="coverPrev"></div>
+          <input type="file" id="cover" name="cover" accept=".jpg,.jpeg,.png,.webp,.gif">
+          <div class="help-text">Ảnh ngang tỉ lệ 3:1, ≤ 10 MB. Bỏ trống sẽ dùng ảnh mặc định theo loại sự kiện.</div>
+        </section>
+        <section class="card sticky">
+          <div id="formAlert"></div>
+          <div class="form-actions">
+            <button type="button" class="btn-primary" id="submitBtn">Lưu &amp; gửi duyệt</button>
+            <button type="button" class="btn-outline" id="draftBtn">Lưu nháp</button>
+            <a class="btn-ghost" href="/manage-events.html">Hủy</a>
+          </div>
+          <p class="fine">Sau khi gửi duyệt, hồ sơ bị khóa chỉnh sửa cho tới khi có kết quả (có thể rút về nháp).</p>
+        </section>
+      </aside>
+    </form>
+
+  </main>
+  <footer class="footer"></footer>
+</div>
+
+<script src="/js/app.js"></script>
+<script src="/js/pages/event-form.js"></script>
+</body>
+</html>

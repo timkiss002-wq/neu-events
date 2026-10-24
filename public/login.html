@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Đăng nhập – NEU Events</title>
+<link rel="icon" href="/img/favicon-neu.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f2a5c;
+    --blue: #1451a8;
+    --blue-dark: #0e4290;
+    --ink: #121c33;
+    --muted: #7b8499;
+    --line: #e3e7ee;
+    --soft: #f6f8fc;
+    --red: #e5484d;
+    /* Thay ảnh nền bên trái bằng ảnh của bạn tại đây */
+    --hero-image: none;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    display: grid;
+    grid-template-columns: 53% 47%;
+    min-height: 100vh;
+  }
+
+  /* ---------- LEFT: hero ---------- */
+  .hero {
+    position: relative;
+    color: #fff;
+    padding: 44px 44px 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    background:
+      linear-gradient(180deg, rgba(15,42,92,.35) 0%, rgba(15,42,92,.55) 45%, rgba(12,36,84,.92) 100%),
+      var(--hero-image) center / cover no-repeat,
+      linear-gradient(160deg, #3d6aa6 0%, #1b3f7a 55%, #0e2a5c 100%);
+  }
+
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-logo {
+    width: 30px; height: 30px;
+    background: #fff; color: var(--blue);
+    border-radius: 7px;
+    display: grid; place-items: center;
+    font-size: 14.5px; font-weight: 800; letter-spacing: -.2px;
+  }
+  .brand-name { font-size: 18px; font-weight: 700; line-height: 1.1; }
+  .brand-sub { font-size: 13px; letter-spacing: .6px; opacity: .85; margin-top: 3px; text-transform: uppercase; }
+
+  .hero-bottom { margin-top: auto; padding-top: 240px; }
+
+  .tagline {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13.5px; font-weight: 600; letter-spacing: .6px;
+    text-transform: uppercase; margin-bottom: 18px;
+  }
+  .tagline::before { content: ""; width: 20px; height: 2px; background: var(--red); }
+
+  .hero h1 {
+    font-size: clamp(32px, 3.6vw, 40px);
+    line-height: 1.3;
+    font-weight: 700;
+    letter-spacing: -.5px;
+    margin-bottom: 22px;
+  }
+
+  .hero p.lead {
+    font-size: 17px; line-height: 1.6;
+    color: rgba(255,255,255,.85);
+    max-width: 380px;
+    margin-bottom: 34px;
+  }
+
+  .stats { display: flex; gap: 36px; margin-bottom: 36px; }
+  .stat strong { display: block; font-size: 23px; font-weight: 700; }
+  .stat span { font-size: 14.5px; color: rgba(255,255,255,.75); }
+
+  .hero-foot { font-size: 14px; color: rgba(255,255,255,.75); }
+
+  /* ---------- RIGHT: form ---------- */
+  .panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 56px;
+  }
+
+  .help {
+    position: absolute; top: 32px; right: 40px;
+    display: flex; align-items: center; gap: 7px;
+    font-size: 15px; color: var(--muted);
+    text-decoration: none;
+  }
+  .help:hover { color: var(--blue); }
+  .help svg { width: 14px; height: 14px; }
+
+  .form-wrap { width: 100%; max-width: 348px; }
+
+  .eyebrow {
+    font-size: 14.5px; font-weight: 600; color: var(--blue);
+    letter-spacing: .2px; text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .form-wrap h2 {
+    font-size: 28px; font-weight: 700; color: var(--navy);
+    letter-spacing: -.4px; margin-bottom: 10px;
+  }
+  .sub { font-size: 15.5px; line-height: 1.55; color: var(--muted); margin-bottom: 28px; }
+
+  .field { margin-bottom: 20px; }
+  .field label {
+    display: block; font-size: 14.5px; font-weight: 600;
+    color: #2b3550; margin-bottom: 9px;
+  }
+  .input {
+    position: relative;
+  }
+  .input input {
+    width: 100%; height: 32px;
+    padding: 0 38px 0 11px;
+    font: inherit; font-size: 15px; color: var(--ink);
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .input input::placeholder { color: #a3abbb; }
+  .input input:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(20,81,168,.14);
+  }
+  .input .icon {
+    position: absolute; right: 11px; top: 50%;
+    transform: translateY(-50%);
+    width: 14px; height: 14px;
+    color: #8a93a6;
+    background: none; border: 0; cursor: pointer;
+    display: grid; place-items: center;
+  }
+  .input .icon svg { width: 14px; height: 14px; }
+  button.icon:hover { color: var(--blue); }
+
+  .row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin: 4px 0 20px;
+    font-size: 14.5px;
+  }
+  .remember { display: flex; align-items: center; gap: 8px; color: var(--muted); cursor: pointer; }
+  .remember input {
+    appearance: none; width: 11px; height: 11px;
+    border: 1px solid #c4cad6; border-radius: 3px; background: #fff;
+    display: grid; place-items: center; cursor: pointer;
+  }
+  .remember input:checked { background: var(--blue); border-color: var(--blue); }
+  .remember input:checked::after {
+    content: ""; width: 3px; height: 6px;
+    border: solid #fff; border-width: 0 1.5px 1.5px 0;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+  .forgot { color: var(--blue); font-weight: 600; text-decoration: none; }
+  .forgot:hover { text-decoration: underline; }
+
+  .btn {
+    width: 100%; height: 34px;
+    display: flex; align-items: center; justify-content: center; gap: 9px;
+    background: var(--blue); color: #fff;
+    font: inherit; font-size: 15px; font-weight: 600;
+    border: 0; border-radius: 7px; cursor: pointer;
+    transition: background .15s;
+  }
+  .btn:hover { background: var(--blue-dark); }
+  .btn:focus-visible { outline: 3px solid rgba(20,81,168,.35); outline-offset: 2px; }
+  .btn svg { width: 13px; height: 13px; }
+
+  .note {
+    margin-top: 18px; padding: 14px 16px;
+    background: var(--soft);
+    border: 1px solid #eef1f7;
+    border-radius: 8px;
+  }
+  .note strong { display: block; font-size: 14.5px; margin-bottom: 7px; color: var(--ink); }
+  .note span { font-size: 14px; line-height: 1.5; color: var(--muted); }
+
+  .contact { text-align: center; margin-top: 22px; font-size: 14.5px; color: var(--muted); }
+  .contact a { color: var(--blue); text-decoration: none; }
+  .contact a:hover { text-decoration: underline; }
+
+  .legal {
+    position: absolute; bottom: 28px; left: 0; right: 0;
+    text-align: center; font-size: 14px; color: var(--muted);
+  }
+  .legal .links { margin-top: 8px; display: flex; justify-content: center; align-items: center; gap: 10px; }
+  .legal a { color: var(--muted); text-decoration: none; }
+  .legal a:hover { color: var(--blue); }
+  .legal .dot { width: 3px; height: 3px; border-radius: 50%; background: #9aa3b5; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    .page { grid-template-columns: 1fr; }
+    .hero { display: none; }
+    .panel { min-height: 100vh; padding: 80px 24px 110px; }
+    .help { right: 20px; }
+  }
+
+  .alert-box:empty { display: none; }
+  .alert-box { margin: -10px 0 18px; padding: 10px 12px; border-radius: 7px; font-size: 14.5px; line-height: 1.5; background: #fdeeee; color: #a52b2b; border: 1px solid #f6d3d3; }
+  .alert-box.ok { background: #e7f6ee; color: #17663a; border-color: #c9ebd7; }
+  .btn[disabled] { opacity: .6; cursor: wait; }
+  .demo { margin-top: 14px; font-size: 14.5px; color: var(--muted); }
+  .demo summary { cursor: pointer; font-weight: 600; color: var(--blue); }
+  .demo-list { display: grid; gap: 6px; margin-top: 10px; }
+  .demo-list button { display: flex; justify-content: space-between; gap: 8px; width: 100%; padding: 8px 10px; font: inherit; font-size: 14.5px; text-align: left; background: #fff; border: 1px solid var(--line); border-radius: 7px; cursor: pointer; color: var(--ink); }
+  .demo-list button:hover { border-color: var(--blue); }
+  .demo-list span { color: var(--muted); }
+</style>
+<link rel="stylesheet" href="/css/enhance.css">
+</head>
+<body>
+<main class="page">
+
+  <!-- LEFT -->
+  <section class="hero">
+    <div class="brand">
+      <img class="brand-logo-img" src="/img/logo-neu.png" alt="Logo Trường Đại học Kinh tế Quốc dân">
+      <div>
+        <div class="brand-name">NEU Events</div>
+        <div class="brand-sub">Đại học Kinh tế Quốc dân</div>
+      </div>
+    </div>
+
+    <div class="hero-bottom">
+      <div class="tagline">Kết nối • Trải nghiệm • Trưởng thành</div>
+      <h1>Mỗi sự kiện,<br>một cơ hội mới.</h1>
+      <p class="lead">Khám phá hoạt động học thuật, kết nối doanh nghiệp và lan tỏa những giá trị đẹp cùng cộng đồng NEU.</p>
+
+      <div class="stats">
+        <div class="stat"><strong>120+</strong><span>Sự kiện mỗi năm</span></div>
+        <div class="stat"><strong>15.000+</strong><span>Lượt sinh viên tham gia</span></div>
+        <div class="stat"><strong>50+</strong><span>Đơn vị đồng hành</span></div>
+      </div>
+
+      <div class="hero-foot">Đại học Kinh tế Quốc dân • 207 Giải Phóng, Hà Nội</div>
+    </div>
+  </section>
+
+  <!-- RIGHT -->
+  <section class="panel">
+    <a href="/guide.html" class="help">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+      Trợ giúp đăng nhập
+    </a>
+
+    <div class="form-wrap">
+      <div class="eyebrow">Chào mừng đến với NEU Events</div>
+      <h2>Đăng nhập</h2>
+      <p class="sub">Sử dụng tài khoản của trường để đăng ký và quản lý các hoạt động của bạn.</p>
+
+      <div class="alert-box" id="alert" role="alert"></div>
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="user">MSSV hoặc email</label>
+          <div class="input">
+            <input id="user" name="username" type="text" placeholder="Nhập MSSV hoặc email NEU" autocomplete="username" required>
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="pass">Mật khẩu</label>
+          <div class="input">
+            <input id="pass" name="password" type="password" placeholder="Nhập mật khẩu" autocomplete="current-password" required>
+            <button type="button" class="icon" id="toggle" aria-label="Hiện mật khẩu">
+              <svg id="eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><path d="M14.12 14.12A3 3 0 1 1 9.88 9.88"/><path d="M1 1l22 22"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="remember"><input type="checkbox" id="remember"> Ghi nhớ đăng nhập</label>
+          <a href="/forgot-password.html" class="forgot">Quên mật khẩu?</a>
+        </div>
+
+        <button type="submit" class="btn" id="submitBtn">
+          Đăng nhập
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        </button>
+      </form>
+
+      <div class="note">
+        <strong>Một tài khoản, đúng không gian của bạn</strong>
+        <span>Sinh viên, ban tổ chức và đơn vị quản lý được cấp quyền theo tài khoản NEU.</span>
+      </div>
+
+      <details class="demo">
+        <summary>Tài khoản demo (mật khẩu: 123456)</summary>
+        <div class="demo-list">
+          <button type="button" data-u="11240123"><b>Sinh viên</b><span>11240123 • Nguyễn Minh Anh</span></button>
+          <button type="button" data-u="cntt@neu.edu.vn"><b>Ban tổ chức</b><span>cntt@neu.edu.vn</span></button>
+          <button type="button" data-u="admin@neu.edu.vn"><b>Đơn vị quản lý</b><span>admin@neu.edu.vn</span></button>
+        </div>
+      </details>
+
+      <p class="contact">Không thể truy cập? Liên hệ <a href="mailto:events@neu.edu.vn">events@neu.edu.vn</a></p>
+    </div>
+
+    <footer class="legal">
+      <div>© 2026 Đại học Kinh tế Quốc dân</div>
+      <div class="links">
+        <a href="/guide.html#quy-dinh">Điều khoản sử dụng</a><span class="dot"></span><a href="/guide.html#bao-mat">Chính sách bảo mật</a>
+      </div>
+    </footer>
+  </section>
+
+</main>
+
+<script>
+  const pass = document.getElementById('pass');
+  const eye = document.getElementById('eye');
+  const open = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  const closed = eye.innerHTML;
+  document.getElementById('toggle').addEventListener('click', () => {
+    const show = pass.type === 'password';
+    pass.type = show ? 'text' : 'password';
+    eye.innerHTML = show ? open : closed;
+  });
+
+  // ===== Kết nối API đăng nhập =====
+  const HOME = { student: '/events.html', organizer: '/manage-events.html', admin: '/moderation.html' };
+  const alertBox = document.getElementById('alert');
+  const btn = document.getElementById('submitBtn');
+  const next = new URLSearchParams(location.search).get('next');
+  const go = (role) => { location.href = next && next.startsWith('/') && !next.startsWith('//') ? next : HOME[role]; };
+
+  // Đã đăng nhập thì chuyển thẳng vào trang chính
+  fetch('/api/auth/me').then((r) => r.ok ? r.json() : null).then((d) => { if (d) go(d.user.role); }).catch(() => {});
+  if (new URLSearchParams(location.search).get('reset') === '1') { alertBox.className = 'alert-box ok'; alertBox.textContent = 'Đặt lại mật khẩu thành công. Vui lòng đăng nhập bằng mật khẩu mới.'; }
+
+  document.querySelectorAll('.demo-list button').forEach((b) => b.addEventListener('click', () => {
+    document.getElementById('user').value = b.dataset.u; pass.value = '123456'; pass.focus();
+  }));
+
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    alertBox.className = 'alert-box'; alertBox.textContent = '';
+    const username = document.getElementById('user').value.trim();
+    if (!username || !pass.value) { alertBox.textContent = 'Vui lòng nhập MSSV/email và mật khẩu.'; return; }
+    btn.disabled = true;
+    try {
+      const res = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password: pass.value, remember: document.getElementById('remember').checked }) });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Đăng nhập thất bại.');
+      go(data.role);
+    } catch (err) {
+      alertBox.textContent = err.message === 'Failed to fetch' ? 'Không kết nối được máy chủ. Hãy chạy "npm start".' : err.message;
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

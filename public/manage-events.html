@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quản lý sự kiện – NEU Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="/img/favicon-neu.png" type="image/png">
+<link rel="stylesheet" href="/css/app.css">
+<style>
+  /* ===== Bổ sung khi nối dữ liệu ===== */
+  .reject-note { display: block; margin-top: 6px; padding: 6px 8px; border-radius: 6px; background: #fdeeee; color: #a52b2b; font-size: 14.5px; line-height: 1.45; }
+  .seat-mini { font-size: 15px; }
+  .seat-mini .bar { width: 90px; height: 4px; border-radius: 2px; background: #e5eaf3; margin-top: 6px; overflow: hidden; }
+  .seat-mini .bar i { display: block; height: 100%; background: var(--blue); }
+  .st-col { display: flex; flex-direction: column; gap: 5px; align-items: flex-start; }
+</style>
+<link rel="stylesheet" href="/css/ui.css">
+<link rel="stylesheet" href="/css/enhance.css">
+</head>
+<body>
+
+<!-- Sidebar & header được dựng bởi /js/app.js theo tài khoản đăng nhập -->
+<aside class="sidebar" aria-label="Điều hướng chính"></aside>
+<div class="scrim" id="scrim"></div>
+<header class="header"></header>
+
+<div class="main">
+  <main class="container">
+    <div class="crumbs">NEU Events <span>/</span> <b>Quản lý sự kiện</b></div>
+
+    <div class="page-head">
+      <div>
+        <h1>Quản lý sự kiện</h1>
+        <p id="sub">Tạo hồ sơ, gửi kiểm duyệt và theo dõi sự kiện của đơn vị.</p>
+      </div>
+      <div class="head-actions">
+        <a class="btn-primary" href="/event-form.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+          Tạo sự kiện mới
+        </a>
+      </div>
+    </div>
+
+    <section class="stats" id="stats"></section>
+
+    <section class="card">
+      <h3>Hồ sơ sự kiện</h3>
+      <div class="hint">Quy trình: Nháp → Gửi duyệt → Đơn vị quản lý phê duyệt (công khai, mở đăng ký) hoặc từ chối kèm lý do → Bổ sung và gửi lại.</div>
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-st="">Tất cả</button>
+        <button class="tab" data-st="draft">Nháp</button>
+        <button class="tab" data-st="pending">Chờ duyệt</button>
+        <button class="tab" data-st="approved">Đã duyệt</button>
+        <button class="tab" data-st="rejected">Bị từ chối</button>
+        <button class="tab" data-st="cancelled">Đã hủy</button>
+      </div>
+      <div class="filters">
+        <div class="search">
+          <input type="text" id="search" placeholder="Tìm tên hoặc mã sự kiện">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="tbl">
+          <thead><tr><th style="width:34%">Sự kiện</th><th>Thời gian</th><th>Đăng ký</th><th>Trạng thái</th><th style="width:24%">Thao tác</th></tr></thead>
+          <tbody id="rows"><tr><td colspan="5"><div class="loading"><span class="spinner"></span></div></td></tr></tbody>
+        </table>
+      </div>
+      <div class="count" id="count"></div>
+    </section>
+
+  </main>
+  <footer class="footer"></footer>
+</div>
+
+<script src="/js/app.js"></script>
+<script src="/js/pages/manage-events.js"></script>
+</body>
+</html>

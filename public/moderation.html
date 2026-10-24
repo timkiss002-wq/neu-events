@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kiểm duyệt sự kiện – NEU Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="/img/favicon-neu.png" type="image/png">
+<link rel="stylesheet" href="/css/app.css">
+<style>
+  :root {
+    --navy: #0f2a5c;
+    --blue: #1451a8;
+    --blue-soft: #e8f0fb;
+    --ink: #121c33;
+    --text: #2b3550;
+    --muted: #7b8499;
+    --line: #e8ebf1;
+    --bg: #f6f8fc;
+    --sidebar-w: 264px;
+    --header-h: 72px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--ink); background: var(--bg); -webkit-font-smoothing: antialiased; }
+  svg { display: block; flex-shrink: 0; }
+  a { text-decoration: none; color: inherit; }
+  button { font: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
+
+  /* ===== Brand ===== */
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-logo { width: 36px; height: 36px; border-radius: 9px; background: var(--blue); color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 800; }
+  .brand-name { font-size: 19px; font-weight: 700; line-height: 1.15; }
+  .brand-sub { font-size: 13.5px; font-weight: 500; letter-spacing: .4px; color: var(--text); margin-top: 3px; text-transform: uppercase; }
+
+  /* ===== Sidebar ===== */
+  .sidebar { position: fixed; inset: 0 auto 0 0; width: var(--sidebar-w); background: #fff; border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: 0 12px 20px; z-index: 30; overflow-y: auto; }
+  .sidebar .brand { height: var(--header-h); padding: 0 12px; margin: 0 -12px 8px; border-bottom: 1px solid var(--line); }
+  .group-title { font-size: 14.5px; font-weight: 700; color: var(--text); letter-spacing: .3px; text-transform: uppercase; padding: 18px 8px 8px; }
+  .group-hint { font-size: 14px; color: var(--muted); padding: 0 8px 8px; margin-top: -4px; }
+  .nav { display: flex; flex-direction: column; gap: 4px; }
+  .nav-item { display: flex; align-items: center; gap: 12px; height: 38px; padding: 0 12px; border-radius: 8px; font-size: 16px; font-weight: 500; color: var(--text); transition: background .15s; }
+  .nav-item svg { width: 17px; height: 17px; color: var(--muted); }
+  .nav-item:hover { background: var(--bg); }
+  .nav-item.active { background: var(--blue-soft); color: var(--blue); font-weight: 600; }
+  .nav-item.active svg { color: var(--blue); }
+  .support { margin-top: 26px; }
+  .support .group-title { padding-top: 0; }
+  .support .nav-item { height: 34px; font-size: 15.5px; }
+  .support .mail { display: block; padding: 8px 12px 0; font-size: 15px; font-weight: 500; color: var(--blue); }
+  .logout { margin-top: auto; padding-top: 24px; }
+  .logout .nav-item { font-size: 15.5px; height: 36px; }
+
+  /* ===== Header ===== */
+  .header { position: fixed; top: 0; left: var(--sidebar-w); right: 0; height: var(--header-h); background: #fff; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: flex-end; gap: 18px; padding: 0 28px; z-index: 20; }
+  .header .brand, .menu-btn { display: none; }
+  .term { font-size: 15px; color: var(--muted); white-space: nowrap; }
+  .badge { font-size: 15px; font-weight: 600; color: var(--blue); background: var(--blue-soft); padding: 6px 12px; border-radius: 6px; }
+  .icon-btn { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; color: var(--muted); }
+  .icon-btn:hover { background: var(--bg); color: var(--blue); }
+  .icon-btn svg { width: 17px; height: 17px; }
+  .divider { width: 1px; height: 32px; background: var(--line); }
+  .user { display: flex; align-items: center; gap: 12px; padding: 4px; border-radius: 10px; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--blue-soft); color: var(--blue); display: grid; place-items: center; font-size: 16px; font-weight: 700; }
+  .user-info { text-align: left; line-height: 1.25; }
+  .user-name { font-size: 16px; font-weight: 600; }
+  .user-id { font-size: 14.5px; color: var(--muted); }
+  .user > svg { width: 14px; height: 14px; color: var(--muted); }
+  .header-right { display: contents; }
+
+  /* ===== Main ===== */
+  .main { margin-left: var(--sidebar-w); padding-top: var(--header-h); min-height: 100vh; display: flex; flex-direction: column; }
+  .container { width: 100%; max-width: 1080px; margin: 0 auto; padding: 24px 28px 32px; flex: 1; display: flex; flex-direction: column; gap: 20px; }
+
+  .crumbs { font-size: 14.5px; color: var(--muted); }
+  .crumbs b { font-weight: 500; color: var(--text); }
+  .crumbs span { margin: 0 6px; }
+  .page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .page-head h1 { font-size: 24px; font-weight: 700; color: var(--navy); letter-spacing: -.3px; }
+  .page-head p { font-size: 15.5px; color: var(--muted); margin-top: 8px; }
+  .btn-outline { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 16px; font-size: 15px; font-weight: 500; background: #fff; border: 1px solid var(--line); border-radius: 8px; white-space: nowrap; }
+  .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+  .btn-outline svg { width: 13px; height: 13px; }
+
+  /* ----- Stats ----- */
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .stat { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+  .stat-top { display: flex; justify-content: space-between; align-items: center; font-size: 15px; color: var(--text); }
+  .stat-top svg { width: 15px; height: 15px; color: var(--muted); }
+  .stat strong { display: block; font-size: 26px; font-weight: 600; margin: 14px 0 12px; }
+  .stat small { font-size: 14.5px; color: var(--muted); }
+
+  /* ----- Two-panel layout ----- */
+  .panels { display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 18px; align-items: start; }
+  .col { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 22px; }
+  .card h3 { font-size: 17px; font-weight: 600; }
+  .card .hint { font-size: 14.5px; color: var(--muted); margin-top: 8px; }
+  .tag { display: inline-block; font-size: 14.5px; font-weight: 600; padding: 5px 10px; border-radius: 5px; background: var(--blue-soft); color: var(--blue); white-space: nowrap; }
+  .tag.amber { background: #fdf0d8; color: #a8690a; }
+  .tag.green { background: #e3f5ea; color: #1a7a43; }
+  .tag.red { background: #fde7e7; color: #c23a3a; }
+
+  /* List panel */
+  .field { position: relative; margin-top: 16px; }
+  .field input, .select { width: 100%; height: 36px; font: inherit; font-size: 15px; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 8px; outline: none; }
+  .field input { padding: 0 38px 0 14px; }
+  .field input::placeholder { color: #a3abbb; }
+  .field svg { position: absolute; right: 13px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--muted); }
+  .select { margin-top: 12px; padding: 0 12px; appearance: none; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237b8499' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") right 12px center no-repeat; }
+  .field input:focus, .select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(20,81,168,.12); }
+
+  .list { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+  .item { display: block; width: 100%; text-align: left; padding: 14px 14px 12px; background: #fff; border: 1px solid var(--line); border-radius: 10px; transition: border-color .15s, background .15s; }
+  .item:hover { border-color: #c5d4ea; }
+  .item.selected { border-color: var(--blue); background: #f3f7fd; box-shadow: 0 0 0 1px var(--blue) inset; }
+  .item-title { display: block; font-size: 15px; font-weight: 600; line-height: 1.4; }
+  .item-sub { display: block; font-size: 14.5px; color: var(--muted); margin: 6px 0 10px; }
+  .item-foot { display: flex; align-items: center; justify-content: space-between; font-size: 14px; color: var(--muted); }
+
+  .note { display: grid; grid-template-columns: 18px 1fr; gap: 12px; padding: 16px 18px; background: #eaf2fc; border: 1px solid #d9e6f8; border-radius: 10px; }
+  .note svg { width: 16px; height: 16px; color: var(--blue); margin-top: 1px; }
+  .note strong { display: block; font-size: 15px; color: var(--navy); margin-bottom: 6px; }
+  .note p { font-size: 14.5px; line-height: 1.55; color: var(--text); }
+
+  /* Detail panel */
+  .detail-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .detail-head h3 { font-size: 18px; }
+
+  .cover { height: 190px; margin: 18px 0 20px; border-radius: 10px; background: var(--cover-image, none) center / cover no-repeat, linear-gradient(135deg, #cfd9ea, #9fb3d4); }
+
+  .meta { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 24px; }
+  .meta dt { font-size: 13.5px; font-weight: 500; letter-spacing: .3px; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+  .meta dd { font-size: 15px; font-weight: 500; color: var(--ink); }
+  .meta dd.big { font-weight: 600; }
+
+  .section-title { font-size: 16.5px; font-weight: 600; margin: 24px 0 12px; }
+  .copy { font-size: 14.5px; line-height: 1.65; color: var(--muted); }
+  .copy + .copy { margin-top: 8px; }
+
+  .files { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  .file { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 16px; border: 1px solid var(--line); border-radius: 8px; font-size: 14.5px; }
+  .file div { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .file span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file svg { width: 15px; height: 15px; color: var(--muted); }
+  .file button:hover svg { color: var(--blue); }
+
+  .checks { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .check { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; font-size: 14.5px; color: var(--text); border: 1px solid var(--line); border-radius: 6px; }
+  .check svg { width: 12px; height: 12px; color: #2f9e5f; }
+
+  /* Decision panel */
+  .label { display: block; font-size: 14.5px; font-weight: 600; margin: 18px 0 8px; }
+  textarea { width: 100%; min-height: 78px; padding: 12px 14px; font: inherit; font-size: 15px; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; resize: vertical; outline: none; }
+  textarea::placeholder { color: #a3abbb; }
+  textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(20,81,168,.12); }
+  .actions { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+  .btn-primary, .btn-danger { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 20px; font-size: 15px; font-weight: 600; border-radius: 8px; transition: background .15s; }
+  .btn-primary { color: #fff; background: var(--blue); }
+  .btn-primary:hover { background: #0e4290; }
+  .btn-danger { color: #c23a3a; background: #fdeeee; }
+  .btn-danger:hover { background: #fbdede; }
+  .btn-primary svg, .btn-danger svg { width: 13px; height: 13px; }
+  .fine { font-size: 14px; line-height: 1.5; color: var(--muted); margin-top: 14px; }
+
+  .footer { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; max-width: 1080px; width: 100%; margin: 0 auto; padding: 18px 28px 22px; border-top: 1px solid var(--line); font-size: 14.5px; color: var(--muted); }
+  .footer nav { display: flex; gap: 14px; }
+
+  .scrim { display: none; }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 1000px) { .term { display: none; } }
+  @media (max-width: 960px) { .panels { grid-template-columns: 1fr; } }
+  @media (max-width: 860px) {
+    .sidebar { transform: translateX(-100%); transition: transform .2s; box-shadow: 0 10px 40px rgba(15,42,92,.18); }
+    body.nav-open .sidebar { transform: none; }
+    body.nav-open .scrim { display: block; position: fixed; inset: 0; background: rgba(15,28,51,.35); z-index: 25; }
+    .header { left: 0; padding: 0 16px; justify-content: space-between; }
+    .header .brand { display: flex; }
+    .menu-btn { display: grid; }
+    .header .brand-sub { display: none; }
+    .header-right { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+    .user-info, .user > svg, .divider { display: none; }
+    .main { margin-left: 0; }
+    .container { padding: 20px 16px 28px; }
+    .footer { padding: 16px; }
+    .card { padding: 18px 16px; }
+    .page-head { flex-direction: column; }
+    .cover { height: 150px; }
+  }
+  @media (max-width: 600px) { .stats { grid-template-columns: 1fr; } .meta { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .sidebar { transition: none; } }
+
+  /* ===== Bổ sung khi nối dữ liệu ===== */
+  .list { max-height: 640px; overflow-y: auto; padding-right: 2px; }
+  .tag.gray { background: #eef1f6; color: var(--muted); }
+  .check { cursor: default; background: #fff; }
+  button.check { cursor: pointer; }
+  button.check svg { color: #c4cad6; }
+  button.check.on { border-color: #b8e1c9; background: #f1faf5; }
+  button.check.on svg { color: #2f9e5f; }
+  .check.off svg { color: #c4cad6; }
+  .file a { display: grid; place-items: center; }
+  .file a:hover svg { color: var(--blue); }
+  .agenda-mini { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; font-size: 14.5px; color: var(--text); }
+  .agenda-mini b { color: var(--blue); font-weight: 600; margin-right: 8px; }
+  .decision-note { margin-top: 14px; padding: 12px 14px; border-radius: 8px; font-size: 15px; line-height: 1.55; background: var(--bg); }
+  .decision-note.red { background: #fdeeee; color: #8f2a2a; }
+  .decision-note.green { background: #e7f6ee; color: #17663a; }
+  .timeline { display: flex; flex-direction: column; gap: 14px; margin-top: 16px; }
+  .tl { display: grid; grid-template-columns: 10px 1fr; gap: 12px; font-size: 14.5px; }
+  .tl i { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); margin-top: 4px; }
+  .tl.red i { background: #c23a3a; } .tl.green i { background: #2f9e5f; } .tl.gray i { background: #b6c2d6; }
+  .tl b { display: block; font-size: 15px; color: var(--ink); }
+  .tl small { display: block; color: var(--muted); margin-top: 3px; }
+  .tl p { margin-top: 4px; color: var(--text); line-height: 1.5; }
+  .item-sub { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dd-full { grid-column: 1 / -1; }
+</style>
+<link rel="stylesheet" href="/css/ui.css">
+<link rel="stylesheet" href="/css/enhance.css">
+</head>
+<body>
+
+<!-- Sidebar & header được dựng bởi /js/app.js theo tài khoản đăng nhập -->
+<aside class="sidebar" aria-label="Điều hướng chính"></aside>
+<div class="scrim" id="scrim"></div>
+<header class="header"></header>
+
+<div class="main">
+  <main class="container">
+    <div class="crumbs">NEU Events <span>/</span> <b>Kiểm duyệt sự kiện</b></div>
+
+    <div class="page-head">
+      <div>
+        <h1>Kiểm duyệt sự kiện</h1>
+        <p>Rà soát hồ sơ, đảm bảo chất lượng nội dung trước khi xuất bản.</p>
+      </div>
+      <a href="/guide.html#kiem-duyet" class="btn-outline">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>
+        Quy trình kiểm duyệt
+      </a>
+    </div>
+
+    <!-- 3 thẻ thống kê -->
+    <section class="stats">
+      <div class="stat"><div class="stat-top">Chờ duyệt <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 7v5l3 2"/></svg></div><strong id="sPending">–</strong><small id="sPendingSub"></small></div>
+      <div class="stat"><div class="stat-top">Đã duyệt <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg></div><strong id="sApproved">–</strong><small id="sApprovedSub"></small></div>
+      <div class="stat"><div class="stat-top">Đã từ chối <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg></div><strong id="sRejected">–</strong><small>Kèm lý do gửi ban tổ chức</small></div>
+    </section>
+
+    <div class="panels">
+
+      <!-- ===== Cột trái: danh sách hồ sơ ===== -->
+      <div class="col">
+        <section class="card">
+          <h3>Hồ sơ sự kiện</h3>
+          <div class="field">
+            <input type="text" id="search" placeholder="Tìm tên hoặc mã hồ sơ">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+          </div>
+          <select class="select" id="status" aria-label="Trạng thái">
+            <option value="">Tất cả trạng thái</option>
+            <option value="pending">Chờ duyệt</option>
+            <option value="approved">Đã duyệt</option>
+            <option value="rejected">Đã từ chối</option>
+            <option value="cancelled">Đã hủy</option>
+          </select>
+
+          <div class="list" id="list"><div class="loading"><span class="spinner"></span></div></div>
+        </section>
+
+        <section class="note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <div>
+            <strong>Phân quyền kiểm duyệt</strong>
+            <p>Chỉ đơn vị quản lý được phê duyệt hoặc từ chối hồ sơ. Quyết định được lưu lịch sử và thông báo tới ban tổ chức.</p>
+          </div>
+        </section>
+      </div>
+
+      <!-- ===== Cột phải: chi tiết + quyết định ===== -->
+      <div class="col" id="detailCol">
+        <section class="card"><div class="loading"><span class="spinner"></span></div></section>
+      </div>
+
+    </div>
+
+  </main>
+  <footer class="footer"></footer>
+</div>
+
+<script src="/js/app.js"></script>
+<script src="/js/pages/moderation.js"></script>
+</body>
+</html>

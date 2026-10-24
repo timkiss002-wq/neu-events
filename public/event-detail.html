@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chi tiết sự kiện – NEU Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="/img/favicon-neu.png" type="image/png">
+<link rel="stylesheet" href="/css/app.css">
+<style>
+  :root {
+    --navy: #0f2a5c;
+    --blue: #1451a8;
+    --blue-soft: #e8f0fb;
+    --ink: #121c33;
+    --text: #2b3550;
+    --muted: #7b8499;
+    --line: #e8ebf1;
+    --bg: #f6f8fc;
+    --sidebar-w: 264px;
+    --header-h: 72px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--ink); background: var(--bg); -webkit-font-smoothing: antialiased; }
+  svg { display: block; flex-shrink: 0; }
+  a { text-decoration: none; color: inherit; }
+  button { font: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
+
+  /* ===== Brand ===== */
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-logo { width: 36px; height: 36px; border-radius: 9px; background: var(--blue); color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 800; }
+  .brand-name { font-size: 19px; font-weight: 700; line-height: 1.15; }
+  .brand-sub { font-size: 13.5px; font-weight: 500; letter-spacing: .4px; color: var(--text); margin-top: 3px; text-transform: uppercase; }
+
+  /* ===== Sidebar ===== */
+  .sidebar { position: fixed; inset: 0 auto 0 0; width: var(--sidebar-w); background: #fff; border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: 0 12px 20px; z-index: 30; overflow-y: auto; }
+  .sidebar .brand { height: var(--header-h); padding: 0 12px; margin: 0 -12px 8px; border-bottom: 1px solid var(--line); }
+  .group-title { font-size: 14.5px; font-weight: 700; color: var(--text); letter-spacing: .3px; text-transform: uppercase; padding: 18px 8px 8px; }
+  .group-hint { font-size: 14px; color: var(--muted); padding: 0 8px 8px; margin-top: -4px; }
+  .nav { display: flex; flex-direction: column; gap: 4px; }
+  .nav-item { display: flex; align-items: center; gap: 12px; height: 38px; padding: 0 12px; border-radius: 8px; font-size: 16px; font-weight: 500; color: var(--text); transition: background .15s; }
+  .nav-item svg { width: 17px; height: 17px; color: var(--muted); }
+  .nav-item:hover { background: var(--bg); }
+  .nav-item.active { background: var(--blue-soft); color: var(--blue); font-weight: 600; }
+  .nav-item.active svg { color: var(--blue); }
+  .support { margin-top: 26px; }
+  .support .group-title { padding-top: 0; }
+  .support .nav-item { height: 34px; font-size: 15.5px; }
+  .support .mail { display: block; padding: 8px 12px 0; font-size: 15px; font-weight: 500; color: var(--blue); }
+  .logout { margin-top: auto; padding-top: 24px; }
+  .logout .nav-item { font-size: 15.5px; height: 36px; }
+
+  /* ===== Header ===== */
+  .header { position: fixed; top: 0; left: var(--sidebar-w); right: 0; height: var(--header-h); background: #fff; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: flex-end; gap: 18px; padding: 0 28px; z-index: 20; }
+  .header .brand, .menu-btn { display: none; }
+  .term { font-size: 15px; color: var(--muted); white-space: nowrap; }
+  .badge { font-size: 15px; font-weight: 600; color: var(--blue); background: var(--blue-soft); padding: 6px 12px; border-radius: 6px; }
+  .icon-btn { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; color: var(--muted); }
+  .icon-btn:hover { background: var(--bg); color: var(--blue); }
+  .icon-btn svg { width: 17px; height: 17px; }
+  .divider { width: 1px; height: 32px; background: var(--line); }
+  .user { display: flex; align-items: center; gap: 12px; padding: 4px; border-radius: 10px; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--blue-soft); color: var(--blue); display: grid; place-items: center; font-size: 16px; font-weight: 700; }
+  .user-info { text-align: left; line-height: 1.25; }
+  .user-name { font-size: 16px; font-weight: 600; }
+  .user-id { font-size: 14.5px; color: var(--muted); }
+  .user > svg { width: 14px; height: 14px; color: var(--muted); }
+  .header-right { display: contents; }
+
+  /* ===== Main ===== */
+  .main { margin-left: var(--sidebar-w); padding-top: var(--header-h); min-height: 100vh; display: flex; flex-direction: column; }
+  .container { width: 100%; max-width: 980px; margin: 0 auto; padding: 24px 28px 40px; flex: 1; }
+
+  .crumbs { font-size: 14.5px; color: var(--muted); margin-bottom: 14px; }
+  .crumbs b { font-weight: 500; color: var(--text); }
+  .crumbs span { margin: 0 6px; }
+
+  .page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+  .page-head h1 { font-size: 24px; font-weight: 700; color: var(--navy); letter-spacing: -.3px; }
+  .page-head p { font-size: 15.5px; color: var(--muted); margin-top: 8px; }
+  .btn-outline { display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 16px; font-size: 15px; font-weight: 500; background: #fff; border: 1px solid var(--line); border-radius: 8px; white-space: nowrap; }
+  .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+  .btn-outline svg { width: 13px; height: 13px; }
+
+  /* ----- Banner ----- */
+  .banner {
+    position: relative; height: 230px; border-radius: 14px; overflow: hidden; margin-bottom: 16px;
+    display: flex; flex-direction: column; justify-content: flex-end; padding: 20px 22px;
+    color: #fff;
+    background:
+      linear-gradient(180deg, rgba(15,42,92,.15) 0%, rgba(15,42,92,.55) 55%, rgba(12,36,84,.92) 100%),
+      var(--banner-image, none) center / cover no-repeat,
+      linear-gradient(135deg, #3d6aa6, #0e2a5c);
+  }
+  .tags { display: flex; gap: 6px; margin-bottom: 10px; }
+  .tag { font-size: 14px; font-weight: 600; padding: 4px 9px; border-radius: 5px; background: #eaf1fc; color: var(--blue); }
+  .tag.ok { background: #e3f5ea; color: #1a7a43; }
+  .banner h2 { font-size: 24px; font-weight: 700; letter-spacing: -.3px; margin-bottom: 8px; }
+  .banner p { font-size: 15px; opacity: .88; }
+
+  /* ----- Two-column grid ----- */
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: start; }
+  .col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; }
+  .card h3 { font-size: 17px; font-weight: 600; color: var(--ink); }
+  .card .hint { font-size: 14.5px; color: var(--muted); margin-top: 6px; }
+  .card .body { margin-top: 16px; }
+
+  /* placeholder blocks – thay bằng nội dung thật */
+  .ph { background: #f1f4f9; border-radius: 6px; }
+  .line { height: 9px; background: #eef1f6; border-radius: 4px; margin-bottom: 9px; }
+  .line.w60 { width: 60%; } .line.w80 { width: 80%; } .line.w40 { width: 40%; }
+
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+  .tile { height: 40px; background: var(--bg); border: 1px solid #eef1f7; border-radius: 8px; }
+
+  .agenda { display: flex; flex-direction: column; gap: 22px; }
+  .agenda-row { display: grid; grid-template-columns: 76px 1fr; gap: 12px; }
+  .agenda-row .time { height: 10px; width: 56px; background: #dbe5f5; border-radius: 4px; margin-top: 2px; }
+
+  .file { display: flex; align-items: center; gap: 12px; margin-top: 16px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
+  .file .ph { width: 16px; height: 16px; }
+
+  /* right column */
+  .side-fields { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+  .field { display: grid; grid-template-columns: 16px 1fr; gap: 10px; }
+  .field .ph { width: 14px; height: 14px; margin-top: 2px; }
+  .progress { height: 5px; border-radius: 3px; background: #e5eaf3; overflow: hidden; margin: 6px 0 16px; }
+  .progress i { display: block; height: 100%; width: 64%; background: var(--blue); }
+  .btn-primary { display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 16px; font-size: 15px; font-weight: 600; color: #fff; background: var(--blue); border-radius: 7px; transition: background .15s; }
+  .btn-primary:hover { background: #0e4290; }
+  .btn-primary svg { width: 14px; height: 14px; }
+  .status { display: inline-block; font-size: 14px; font-weight: 600; padding: 4px 9px; border-radius: 5px; background: var(--blue-soft); color: var(--blue); margin-top: 14px; }
+
+  .notice { display: grid; grid-template-columns: 16px 1fr; gap: 10px; padding: 14px 16px; background: #eaf2fc; border: 1px solid #d9e6f8; border-radius: 10px; }
+  .notice .ph { width: 14px; height: 14px; border-radius: 50%; background: #c7d9f2; margin-top: 1px; }
+
+  .footer { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; max-width: 980px; width: 100%; margin: 0 auto; padding: 18px 28px 22px; border-top: 1px solid var(--line); font-size: 14.5px; color: var(--muted); }
+  .footer nav { display: flex; gap: 14px; }
+
+  .scrim { display: none; }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 1000px) { .term { display: none; } }
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 860px) {
+    .sidebar { transform: translateX(-100%); transition: transform .2s; box-shadow: 0 10px 40px rgba(15,42,92,.18); }
+    body.nav-open .sidebar { transform: none; }
+    body.nav-open .scrim { display: block; position: fixed; inset: 0; background: rgba(15,28,51,.35); z-index: 25; }
+    .header { left: 0; padding: 0 16px; justify-content: space-between; }
+    .header .brand, .menu-btn { display: flex; }
+    .menu-btn { display: grid; }
+    .header .brand-sub { display: none; }
+    .header-right { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+    .user-info, .user > svg, .divider { display: none; }
+    .main { margin-left: 0; }
+    .container { padding: 20px 16px 32px; }
+    .footer { padding: 16px; }
+    .tiles { grid-template-columns: 1fr; }
+    .banner { height: 190px; }
+  }
+
+  /* ===== Bổ sung khi nối dữ liệu ===== */
+  .crumbs a:hover { color: var(--blue); }
+  .container { display: block; }
+  .head-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .prose { font-size: 15px; line-height: 1.7; color: var(--text); }
+  .prose p + p { margin-top: 8px; }
+  .prose ul { padding-left: 18px; }
+  .prose li { margin-bottom: 4px; }
+  .tile { height: auto; min-height: 40px; padding: 10px 12px; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+  .tile small { font-size: 13.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .3px; }
+  .tile b { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .agenda-row .t { font-size: 15px; font-weight: 600; color: var(--blue); padding-top: 1px; }
+  .agenda-row b { display: block; font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .agenda-row span { font-size: 14.5px; color: var(--muted); }
+  .file { justify-content: space-between; text-decoration: none; }
+  .file > div { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .file svg { width: 16px; height: 16px; color: var(--muted); }
+  .file b { display: block; font-size: 15px; font-weight: 600; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file small { font-size: 14px; color: var(--muted); }
+  .file:hover { border-color: var(--blue); }
+  .field .ic svg { width: 14px; height: 14px; color: var(--blue); margin-top: 2px; }
+  .field small { display: block; font-size: 14px; color: var(--muted); margin-bottom: 4px; }
+  .field b { display: block; font-size: 15px; font-weight: 600; line-height: 1.45; }
+  .field span { display: block; font-size: 14.5px; color: var(--text); line-height: 1.45; }
+  .status.green { background: #e3f5ea; color: #1a7a43; }
+  .status.red { background: #fde7e7; color: #c23a3a; }
+  .status.gray { background: #eef1f6; color: var(--muted); }
+  .status.amber { background: #fdf0d8; color: #a8690a; }
+  .seat-line { display: flex; justify-content: space-between; font-size: 14.5px; color: var(--text); }
+  .seat-line b { color: var(--ink); }
+  #joinActions { display: flex; flex-direction: column; gap: 8px; }
+  #joinActions .btn-primary, #joinActions .btn-outline, #joinActions .btn-danger { width: 100%; justify-content: center; }
+  .join-note { font-size: 14.5px; color: var(--muted); line-height: 1.5; margin-top: 12px; }
+  .join-note b { color: var(--ink); }
+  .org { display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: center; }
+  .org-logo { width: 34px; height: 34px; border-radius: 8px; background: var(--blue-soft); color: var(--blue); display: grid; place-items: center; font-size: 14.5px; font-weight: 800; }
+  .org b { display: block; font-size: 15px; }
+  .org small { font-size: 14.5px; color: var(--muted); }
+  .contact-list { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; font-size: 14.5px; color: var(--text); }
+  .contact-list div { display: flex; gap: 8px; align-items: center; }
+  .contact-list svg { width: 13px; height: 13px; color: var(--muted); }
+  .notice > svg { width: 15px; height: 15px; color: var(--blue); margin-top: 1px; }
+  .notice strong { display: block; font-size: 15px; color: var(--navy); margin-bottom: 5px; }
+  .notice p { font-size: 14.5px; line-height: 1.55; color: var(--text); }
+  .mbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 16px; margin-bottom: 16px; background: #fff; border: 1px dashed #c5d4ea; border-radius: 10px; font-size: 15px; color: var(--text); }
+  .mbar .acts { display: flex; gap: 8px; flex-wrap: wrap; }
+  .rv-sum { display: flex; align-items: center; gap: 14px; }
+  .rv-sum strong { font-size: 28px; font-weight: 700; color: var(--navy); }
+  .rv-sum small { display: block; font-size: 14.5px; color: var(--muted); margin-top: 4px; }
+  .my-review { margin-top: 14px; padding: 12px 14px; background: var(--bg); border-radius: 8px; font-size: 15px; line-height: 1.5; }
+</style>
+<link rel="stylesheet" href="/css/ui.css">
+<link rel="stylesheet" href="/css/enhance.css">
+</head>
+<body>
+
+<!-- Sidebar & header được dựng bởi /js/app.js theo tài khoản đăng nhập -->
+<aside class="sidebar" aria-label="Điều hướng chính"></aside>
+<div class="scrim" id="scrim"></div>
+<header class="header"></header>
+
+<div class="main">
+  <main class="container">
+    <div class="crumbs">NEU Events <span>/</span> <a href="/events.html">Sự kiện</a> <span>/</span> <b id="crumbTitle">…</b></div>
+
+    <div class="page-head">
+      <div>
+        <h1>Chi tiết sự kiện</h1>
+        <p id="summary">Đang tải…</p>
+      </div>
+      <div class="head-actions" id="headActions">
+        <button class="btn-outline" id="shareBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+          Chia sẻ
+        </button>
+      </div>
+    </div>
+
+    <div id="managerBar"></div>
+
+    <!-- Banner: ảnh bìa đặt qua --banner-image -->
+    <section class="banner" id="banner">
+      <div class="tags" id="tags"></div>
+      <h2 id="title"></h2>
+      <p id="slogan"></p>
+    </section>
+
+    <div class="grid">
+      <!-- Cột trái -->
+      <div class="col">
+        <section class="card">
+          <h3>Về sự kiện</h3>
+          <div class="body prose" id="about"></div>
+          <div class="tiles" id="tiles"></div>
+        </section>
+
+        <section class="card">
+          <h3>Chương trình sự kiện</h3>
+          <div class="hint" id="agendaDate"></div>
+          <div class="body agenda" id="agenda"></div>
+        </section>
+
+        <section class="card">
+          <h3>Chuẩn bị trước khi tham gia</h3>
+          <div class="body prose" id="prep"></div>
+          <div id="files"></div>
+        </section>
+
+        <section class="card" id="reviewCard" hidden>
+          <h3>Đánh giá từ người tham dự</h3>
+          <div class="body" id="reviewSummary"></div>
+        </section>
+      </div>
+
+      <!-- Cột phải -->
+      <aside class="col">
+        <section class="card">
+          <h3>Tham gia sự kiện</h3>
+          <span class="status" id="joinStatus"></span>
+          <div class="side-fields" id="sideFields"></div>
+          <div class="body" style="margin-top:18px">
+            <div class="seat-line" id="seatLine"></div>
+            <div class="progress"><i id="progressBar" style="width:0"></i></div>
+            <div id="joinActions"></div>
+            <p class="join-note" id="joinNote"></p>
+          </div>
+        </section>
+
+        <section class="card">
+          <h3>Đơn vị tổ chức</h3>
+          <div class="body" id="organizer"></div>
+        </section>
+
+        <section class="notice">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <div id="noticeText"></div>
+        </section>
+      </aside>
+    </div>
+
+  </main>
+  <footer class="footer"></footer>
+</div>
+
+<script src="/js/app.js"></script>
+<script src="/js/pages/event-detail.js"></script>
+</body>
+</html>

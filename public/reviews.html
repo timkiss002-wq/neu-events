@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Đánh giá sự kiện – NEU Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="/img/favicon-neu.png" type="image/png">
+<link rel="stylesheet" href="/css/app.css">
+<style>
+  /* ===== Bổ sung khi nối dữ liệu ===== */
+  .rv-list { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+  .rv-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 16px 18px; border: 1px solid var(--line); border-radius: 10px; }
+  .rv-item.todo { border-color: #f6e3b8; background: #fffbf2; }
+  .rv-item b { display: block; font-size: 15.5px; font-weight: 600; }
+  .rv-item small { display: block; font-size: 14.5px; color: var(--muted); margin-top: 4px; }
+  .rv-item p { font-size: 15px; color: var(--text); margin-top: 8px; line-height: 1.5; }
+  .rv-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  .two { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 18px; align-items: start; }
+  .ev-pick { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; max-height: 560px; overflow: auto; }
+  .ev-pick button { text-align: left; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+  .ev-pick button.sel { border-color: var(--blue); background: #f3f7fd; box-shadow: 0 0 0 1px var(--blue) inset; }
+  .ev-pick b { display: block; font-size: 15px; line-height: 1.4; }
+  .ev-pick small { display: flex; justify-content: space-between; font-size: 14.5px; color: var(--muted); margin-top: 6px; }
+  .dist { display: flex; flex-direction: column; gap: 8px; margin: 16px 0 6px; }
+  .dist-row { display: grid; grid-template-columns: 40px 1fr 36px; gap: 10px; align-items: center; font-size: 14.5px; color: var(--text); }
+  .dist-row .bar { height: 8px; border-radius: 4px; background: #eef1f6; overflow: hidden; }
+  .dist-row .bar i { display: block; height: 100%; background: #f0b429; }
+  .big-score { display: flex; gap: 16px; align-items: center; margin-top: 14px; }
+  .big-score strong { font-size: 40px; font-weight: 700; color: var(--navy); line-height: 1; }
+  .comments { display: flex; flex-direction: column; margin-top: 10px; max-height: 560px; overflow-y: auto; padding-right: 6px; }
+  .cmt { padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .cmt:last-child { border-bottom: 0; }
+  .cmt-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; font-size: 15px; }
+  .cmt-head b { font-weight: 600; }
+  .cmt p { font-size: 15px; color: var(--text); margin-top: 6px; line-height: 1.55; }
+  .cmt small { font-size: 14px; color: var(--muted); }
+  @media (max-width: 960px) { .two { grid-template-columns: 1fr; } }
+</style>
+<link rel="stylesheet" href="/css/ui.css">
+<link rel="stylesheet" href="/css/enhance.css">
+</head>
+<body>
+
+<!-- Sidebar & header được dựng bởi /js/app.js theo tài khoản đăng nhập -->
+<aside class="sidebar" aria-label="Điều hướng chính"></aside>
+<div class="scrim" id="scrim"></div>
+<header class="header"></header>
+
+<div class="main">
+  <main class="container">
+    <div class="crumbs">NEU Events <span>/</span> <b>Đánh giá sự kiện</b></div>
+
+    <div class="page-head">
+      <div>
+        <h1>Đánh giá sự kiện</h1>
+        <p id="sub">Chia sẻ cảm nhận để ban tổ chức nâng cao chất lượng hoạt động.</p>
+      </div>
+    </div>
+
+    <section class="stats s3" id="stats"></section>
+    <div id="content"><div class="card"><div class="loading"><span class="spinner"></span></div></div></div>
+
+    <section class="note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <div>
+        <strong>Quy định đánh giá</strong>
+        <p>Chỉ các sự kiện có trạng thái Đã tham dự mới được mở đánh giá. Mỗi sinh viên đánh giá một lần cho mỗi sự kiện và có thể chỉnh sửa sau đó. Đánh giá được tổng hợp vào báo cáo của đơn vị quản lý.</p>
+      </div>
+    </section>
+
+  </main>
+  <footer class="footer"></footer>
+</div>
+
+<script src="/js/app.js"></script>
+<script src="/js/pages/reviews.js"></script>
+</body>
+</html>

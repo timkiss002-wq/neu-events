@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Duyệt điểm hoạt động – NEU Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="/img/favicon-neu.png" type="image/png">
+<link rel="stylesheet" href="/css/app.css">
+<style>
+  .pt-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 18px; align-items: start; }
+  .pt-list { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+  .pt-item { text-align: left; padding: 14px 16px; border: 1px solid var(--line); border-radius: 10px; background: #fff; display: flex; flex-direction: column; gap: 6px; }
+  .pt-item:hover { border-color: var(--blue-mid); }
+  .pt-item.sel { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-soft); }
+  .pt-item b { font-size: 16px; color: var(--ink); }
+  .pt-item small { font-size: 14.5px; color: var(--muted); }
+  .pt-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .pt-sum { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 14px 0; }
+  .pt-sum div { background: var(--bg); border-radius: 10px; padding: 12px 14px; }
+  .pt-sum strong { display: block; font-size: 24px; color: var(--navy); }
+  .pt-sum small { font-size: 14.5px; color: var(--muted); }
+  .pt-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; }
+  .pt-note { margin-top: 10px; padding: 10px 12px; border-radius: 8px; background: #fff8e6; font-size: 15px; }
+  @media (max-width: 1000px) { .pt-grid { grid-template-columns: 1fr; } }
+</style>
+<link rel="stylesheet" href="/css/ui.css">
+<link rel="stylesheet" href="/css/enhance.css">
+</head>
+<body>
+
+<!-- Sidebar & header được dựng bởi /js/app.js theo tài khoản đăng nhập -->
+<aside class="sidebar" aria-label="Điều hướng chính"></aside>
+<div class="scrim" id="scrim"></div>
+<header class="header"></header>
+
+<div class="main">
+  <main class="container">
+    <div class="crumbs">NEU Events <span>/</span> <b>Duyệt điểm hoạt động</b></div>
+    <div class="page-head">
+      <div>
+        <h1>Duyệt điểm hoạt động</h1>
+        <p>Duyệt danh sách sinh viên hoàn thành (check-in + check-out) do Ban tổ chức gửi về để cộng điểm Đoàn theo cấp chương trình.</p>
+      </div>
+    </div>
+    <section class="stats" id="stats"></section>
+    <div class="pt-grid">
+      <section class="card">
+        <h3>Danh sách gửi về</h3>
+        <div class="tabs" id="tabs">
+          <button class="tab active" data-st="">Tất cả</button>
+          <button class="tab" data-st="pending">Chờ duyệt</button>
+          <button class="tab" data-st="approved">Đã duyệt</button>
+          <button class="tab" data-st="rejected">Từ chối</button>
+        </div>
+        <div class="pt-list" id="list"><div class="loading"><span class="spinner"></span></div></div>
+      </section>
+      <section class="card" id="detail"><div class="hint">Chọn một danh sách để xem chi tiết.</div></section>
+    </div>
+
+  </main>
+  <footer class="footer"></footer>
+</div>
+
+<script src="/js/app.js"></script>
+<script src="/js/pages/points.js"></script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hướng dẫn sử dụng – NEU Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="/img/favicon-neu.png" type="image/png">
+<link rel="stylesheet" href="/css/app.css">
+<style>
+  /* ===== Bổ sung khi nối dữ liệu ===== */
+  .guide { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 18px; align-items: start; }
+  .toc { position: sticky; top: calc(var(--header-h) + 16px); display: flex; flex-direction: column; gap: 4px; padding: 18px; }
+  .toc b { font-size: 15px; text-transform: uppercase; letter-spacing: .3px; color: var(--text); margin-bottom: 8px; }
+  .toc a { font-size: 15px; color: var(--text); padding: 6px 8px; border-radius: 6px; }
+  .toc a:hover { background: var(--bg); color: var(--blue); }
+  .g-body { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .g-body section { scroll-margin-top: calc(var(--header-h) + 16px); }
+  .g-body p, .g-body li { font-size: 15px; line-height: 1.7; color: var(--text); }
+  .g-body p { margin-top: 12px; }
+  .steps { margin: 14px 0 0 18px; display: flex; flex-direction: column; gap: 8px; }
+  .bul { margin: 14px 0 0 18px; }
+  .roles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; }
+  .roles div { padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); }
+  .roles p { margin-top: 8px; font-size: 14.5px; }
+  .flow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+  .flow > div { display: flex; flex-direction: column; gap: 5px; align-items: flex-start; }
+  .flow small { font-size: 14px; color: var(--muted); }
+  .flow i { color: var(--muted); font-style: normal; }
+  .tip-box { margin-top: 14px; padding: 12px 14px; background: #eaf2fc; border-radius: 9px; font-size: 15px; line-height: 1.6; color: var(--navy); }
+  code { background: #eef1f6; padding: 1px 5px; border-radius: 4px; font-size: 14.5px; }
+  details { border-top: 1px solid var(--line); padding: 12px 0; }
+  details:first-of-type { margin-top: 10px; }
+  summary { cursor: pointer; font-size: 15px; font-weight: 600; }
+  details p { margin-top: 8px !important; }
+  body.guest .main { margin-left: 0; }
+  body.guest .header { left: 0; justify-content: space-between; }
+  body.guest .header .brand { display: flex; }
+  @media (max-width: 860px) { .guide { grid-template-columns: 1fr; } .toc { position: static; } .roles { grid-template-columns: 1fr; } }
+</style>
+<link rel="stylesheet" href="/css/ui.css">
+<link rel="stylesheet" href="/css/enhance.css">
+</head>
+<body>
+
+<!-- Sidebar & header được dựng bởi /js/app.js theo tài khoản đăng nhập -->
+<aside class="sidebar" aria-label="Điều hướng chính"></aside>
+<div class="scrim" id="scrim"></div>
+<header class="header"></header>
+
+<div class="main">
+  <main class="container">
+    <div class="crumbs">NEU Events <span>/</span> <b>Hướng dẫn sử dụng</b></div>
+    <div class="page-head">
+      <div>
+        <h1>Hướng dẫn sử dụng</h1>
+        <p>Các bước thao tác chính dành cho tài khoản của bạn.</p>
+      </div>
+    </div>
+
+    <div class="guide">
+      <nav class="card toc" aria-label="Mục lục" id="toc"><b>Mục lục</b></nav>
+
+      <div class="g-body">
+        <section class="card" id="bat-dau" data-roles="guest student organizer admin">
+          <h3>Bắt đầu</h3>
+          <p data-roles="guest student">Sinh viên đăng nhập bằng <b>MSSV hoặc email NEU</b> và mật khẩu.</p>
+          <p data-roles="guest organizer admin">Ban tổ chức đăng nhập bằng <b>email đơn vị (đuôi @neu.edu.vn)</b> do Đơn vị quản lý cấp. Sau khi đăng nhập, đơn vị có thể đổi email, mật khẩu tại <i>Hồ sơ cá nhân</i>.</p>
+          <div class="roles" data-roles="guest organizer admin">
+            <div><span class="st">Sinh viên</span><p>Khám phá, đăng ký sự kiện, check-in/check-out, đánh giá và tích lũy điểm hoạt động.</p></div>
+            <div><span class="st navy">Ban tổ chức</span><p>Tạo hồ sơ sự kiện, quản lý điểm danh, xem phản hồi, thống kê và gửi danh sách nhận điểm.</p></div>
+            <div><span class="st green">Đơn vị quản lý</span><p>Kiểm duyệt hồ sơ, cấp tài khoản đơn vị, duyệt điểm hoạt động và xem báo cáo toàn trường.</p></div>
+          </div>
+          <p>Ô <b>học kỳ</b> trên thanh đầu trang dùng để chọn học kỳ cần xem; có thể chọn các học kỳ của năm học trước để tra cứu lại.</p>
+          <p>Quên mật khẩu: chọn <a class="link" href="/forgot-password.html">Quên mật khẩu?</a> ở trang đăng nhập, nhập MSSV/email để nhận mã xác nhận 6 số (hiệu lực 15 phút), rồi đặt mật khẩu mới.</p>
+        </section>
+
+        <section class="card" id="sinh-vien" data-roles="guest student">
+          <h3>Đăng ký và tham gia sự kiện</h3>
+          <ol class="steps">
+            <li><b>Khám phá sự kiện</b> — mục <i>Sự kiện</i>: lọc theo trạng thái (đang mở đăng ký, sắp/đang diễn ra…), loại và đơn vị tổ chức.</li>
+            <li><b>Đăng ký</b> — mở chi tiết sự kiện, bấm <i>Đăng ký tham gia</i>. Hệ thống tạo <b>mã đăng ký</b> riêng. Nút bị khóa khi hết chỗ hoặc quá hạn đăng ký.</li>
+            <li><b>Hủy đăng ký</b> — được hủy trước hạn đăng ký và trước khi sự kiện bắt đầu, tại trang chi tiết hoặc mục <i>Đã đăng ký</i>.</li>
+            <li><b>Check-in</b> — khi ban tổ chức mở phiên check-in, vào mục <i>Điểm danh</i>, nhập mã hoặc quét mã QR trình chiếu tại sự kiện.</li>
+            <li><b>Check-out</b> — cuối sự kiện, ban tổ chức mở phiên check-out; nhập mã check-out tương tự. <b>Chỉ check-out được khi đã được ghi nhận check-in.</b></li>
+            <li><b>Đánh giá</b> — sau khi tham dự, mục <i>Đánh giá</i> mở cho bạn chấm 1–5 sao và nhận xét; có thể chọn <b>gửi ẩn danh</b> để ban tổ chức không thấy tên.</li>
+          </ol>
+        </section>
+
+        <section class="card" id="diem-sv" data-roles="guest student">
+          <h3>Điểm hoạt động</h3>
+          <p>Sinh viên được ghi nhận <b>Hoàn thành</b> khi có đủ check-in và check-out. Sau sự kiện, ban tổ chức gửi danh sách hoàn thành lên Đơn vị quản lý; khi được duyệt, điểm hoạt động được cộng theo cấp chương trình:</p>
+          <div class="roles">
+            <div><span class="st navy">Cấp Trường</span><p>5 điểm</p></div>
+            <div><span class="st">Cấp Khoa/Viện</span><p>3 điểm</p></div>
+            <div><span class="st gray">Cấp Chi đoàn/CLB</span><p>2 điểm</p></div>
+          </div>
+          <p>Xem điểm đã được cộng tại mục <i>Đã đăng ký</i> (chọn học kỳ để xem lại các học kỳ trước).</p>
+        </section>
+
+        <section class="card" id="ban-to-chuc" data-roles="organizer admin">
+          <h3>Dành cho ban tổ chức</h3>
+          <ol class="steps">
+            <li><b>Tạo hồ sơ</b> — <i>Quản lý sự kiện → Tạo sự kiện mới</i>: thông tin chung, chương trình, thời gian, quy mô, kinh phí, <b>cấp chương trình &amp; điểm hoạt động</b>, ảnh bìa và file đính kèm.</li>
+            <li><b>Lưu nháp hoặc gửi duyệt</b> — hồ sơ chờ duyệt bị khóa chỉnh sửa; có thể <i>Rút về nháp</i> nếu cần sửa.</li>
+            <li><b>Danh sách đăng ký</b> — <i>Điểm danh</i> → chọn sự kiện để xem toàn bộ sinh viên đăng ký, lọc theo trạng thái và xuất Excel để check-in.</li>
+            <li><b>Mở check-in</b> — từ 60 phút trước giờ bắt đầu, bấm <i>Mở check-in</i>, trình chiếu mã hoặc QR.</li>
+            <li><b>Mở check-out</b> — từ khi bắt đầu đến 120 phút sau khi kết thúc, bấm <i>Mở check-out</i> (hoặc <i>Chuyển sang check-out</i>). Sinh viên chưa check-in không thể check-out.</li>
+            <li><b>Sửa thủ công</b> — ghi nhận trạng thái thủ công khi cần, <b>bắt buộc nhập lý do</b>; thay đổi được lưu lịch sử và báo cho sinh viên.</li>
+            <li><b>Danh sách hoàn thành</b> — sinh viên có cả check-in và check-out; xuất <i>Danh sách hoàn thành</i> để làm minh chứng điểm Đoàn và quyền lợi.</li>
+            <li><b>Gửi danh sách nhận điểm</b> — sau khi sự kiện kết thúc, bấm <i>Gửi danh sách nhận điểm</i> để Đơn vị quản lý duyệt cộng điểm.</li>
+            <li><b>Phản hồi</b> — mục <i>Đánh giá</i> hiển thị điểm trung bình và nhận xét của sinh viên (đánh giá ẩn danh không hiện tên).</li>
+          </ol>
+          <div class="tip-box"><b>Mẹo QR trên localhost:</b> mã QR tự dùng địa chỉ mạng LAN của máy (hiện trong cửa sổ chạy <code>npm start</code>). Điện thoại cần kết nối <b>cùng mạng Wi-Fi</b>.</div>
+        </section>
+
+        <section class="card" id="kiem-duyet" data-roles="organizer admin">
+          <h3>Quy trình kiểm duyệt</h3>
+          <div class="flow">
+            <div><span class="st gray">Nháp</span><small>BTC soạn hồ sơ</small></div><i>→</i>
+            <div><span class="st amber">Chờ duyệt</span><small>BTC gửi duyệt</small></div><i>→</i>
+            <div><span class="st green">Đã duyệt</span><small>Công khai &amp; mở đăng ký</small></div>
+          </div>
+          <div class="flow" style="margin-top:10px">
+            <div><span class="st amber">Chờ duyệt</span></div><i>→</i>
+            <div><span class="st red">Đã từ chối</span><small>Kèm lý do bắt buộc</small></div><i>→</i>
+            <div><span class="st gray">BTC bổ sung</span><small>Gửi duyệt lại</small></div>
+          </div>
+          <p>Người kiểm duyệt rà soát 3 tiêu chí: <b>Nội dung phù hợp</b>, <b>Đủ hồ sơ</b>, <b>Quy mô hợp lý</b>. Mọi quyết định được lưu ở <i>Lịch sử hồ sơ</i> và gửi thông báo tới ban tổ chức.</p>
+        </section>
+
+        <section class="card" id="duyet-diem" data-roles="admin">
+          <h3>Duyệt điểm hoạt động</h3>
+          <p>Mục <i>Duyệt điểm hoạt động</i> liệt kê các danh sách do ban tổ chức gửi. Mở từng danh sách để xem sinh viên hoàn thành (giờ check-in, check-out), sau đó <b>Duyệt</b> để cộng điểm theo cấp chương trình hoặc <b>Từ chối</b> kèm lý do để ban tổ chức rà soát, gửi lại.</p>
+        </section>
+
+        <section class="card" id="tai-khoan" data-roles="admin">
+          <h3>Tài khoản đơn vị</h3>
+          <p>Khi một đơn vị đăng ký sử dụng hệ thống, vào <i>Tài khoản đơn vị → Cấp tài khoản</i>: chọn đơn vị có sẵn hoặc nhập đơn vị mới, cấp email @neu.edu.vn và mật khẩu ban đầu. Có thể đổi email, đặt lại mật khẩu, khóa/mở khóa tài khoản bất cứ lúc nào.</p>
+        </section>
+
+        <section class="card" id="bao-cao" data-roles="organizer admin">
+          <h3>Báo cáo – thống kê</h3>
+          <p data-roles="organizer">Ban tổ chức xem thống kê và xuất báo cáo <b>cho các sự kiện của đơn vị mình</b>.</p>
+          <p>Chọn khoảng thời gian và loại sự kiện rồi bấm <i>Áp dụng</i>. Báo cáo gồm số sự kiện, lượt đăng ký, tham dự, hoàn thành, tỷ lệ tham dự, biểu đồ theo tuần/tháng, cơ cấu theo loại và bảng hiệu quả từng sự kiện. <i>Xuất báo cáo</i> tạo file Excel nhiều trang tính.</p>
+          <p><b>Cách tính:</b> tỷ lệ tham dự = lượt tham dự / lượt đăng ký của các sự kiện <b>đã kết thúc</b>; sự kiện đã hủy không tính; “—” là chưa có dữ liệu.</p>
+        </section>
+
+        <section class="card" id="quy-dinh" data-roles="guest student organizer admin">
+          <h3>Quy định sử dụng</h3>
+          <ul class="bul">
+            <li>Mỗi tài khoản chỉ dùng cho cá nhân/đơn vị được cấp; không chia sẻ mật khẩu hay mã điểm danh cho người không có mặt tại sự kiện.</li>
+            <li data-roles="guest student">Sinh viên chỉ check-in, check-out cho đăng ký của mình, tại địa điểm và trong khung giờ quy định.</li>
+            <li data-roles="guest organizer admin">Ban tổ chức chịu trách nhiệm về tính chính xác của thông tin sự kiện và danh sách tham dự; mọi chỉnh sửa thủ công cần lý do rõ ràng.</li>
+            <li>Nội dung đánh giá cần lịch sự, mang tính xây dựng.</li>
+          </ul>
+        </section>
+
+        <section class="card" id="bao-mat" data-roles="guest student organizer admin">
+          <h3>Bảo mật &amp; dữ liệu</h3>
+          <ul class="bul">
+            <li>Mật khẩu được mã hóa một chiều (bcrypt); phiên đăng nhập dùng cookie HttpOnly.</li>
+            <li>Mỗi thao tác quan trọng (duyệt, từ chối, sửa điểm danh, cộng điểm, đổi mật khẩu…) được ghi vào nhật ký hệ thống.</li>
+            <li>Dữ liệu cá nhân chỉ hiển thị cho ban tổ chức của sự kiện bạn đăng ký và đơn vị quản lý.</li>
+          </ul>
+        </section>
+
+        <section class="card" id="hoi-dap" data-roles="guest student organizer admin">
+          <h3>Câu hỏi thường gặp</h3>
+          <details data-roles="guest student"><summary>Vì sao tôi không check-out được?</summary><p>Check-out chỉ thực hiện được khi ban tổ chức đã ghi nhận bạn check-in. Hãy liên hệ ban tổ chức nếu bạn có mặt nhưng chưa được ghi nhận.</p></details>
+          <details data-roles="guest student"><summary>Khi nào tôi được cộng điểm hoạt động?</summary><p>Sau khi ban tổ chức gửi danh sách hoàn thành và Đơn vị quản lý duyệt; bạn sẽ nhận thông báo.</p></details>
+          <details data-roles="guest student"><summary>Đánh giá ẩn danh có hiện tên không?</summary><p>Không. Ban tổ chức chỉ thấy “Sinh viên ẩn danh”.</p></details>
+          <details data-roles="guest student"><summary>Có thể đăng ký lại sau khi hủy?</summary><p>Có, nếu sự kiện vẫn còn chỗ và chưa hết hạn đăng ký.</p></details>
+          <details data-roles="organizer admin"><summary>Danh sách điểm bị từ chối thì làm gì?</summary><p>Xem lý do trong thông báo, rà soát lại điểm danh rồi bấm <i>Gửi danh sách nhận điểm</i> lần nữa.</p></details>
+          <details data-roles="organizer admin"><summary>Sự kiện bị hủy có tính vắng mặt không?</summary><p>Không. Đăng ký của sự kiện bị hủy được chuyển sang trạng thái Đã hủy.</p></details>
+          <p style="margin-top:14px">Cần hỗ trợ thêm? Liên hệ <a class="link" href="mailto:events@neu.edu.vn">events@neu.edu.vn</a>.</p>
+        </section>
+      </div>
+    </div>
+
+
+  </main>
+  <footer class="footer"></footer>
+</div>
+
+<script src="/js/app.js"></script>
+<script src="/js/pages/guide.js"></script>
+</body>
+</html>
