@@ -311,15 +311,16 @@
 
       <div class="note">
         <strong>Một tài khoản, đúng không gian của bạn</strong>
-        <span>Sinh viên, ban tổ chức và đơn vị quản lý được cấp quyền theo tài khoản NEU.</span>
+        <span>Sinh viên, ban tổ chức, đơn vị quản lý và quản trị hệ thống được cấp quyền theo tài khoản NEU.</span>
       </div>
 
       <details class="demo">
         <summary>Tài khoản demo (mật khẩu: 123456)</summary>
         <div class="demo-list">
-          <button type="button" data-u="11240123"><b>Sinh viên</b><span>11240123 • Nguyễn Minh Anh</span></button>
+          <button type="button" data-u="11240123"><b>Sinh viên</b><span>11240123 • Thân Mậu Dũng</span></button>
           <button type="button" data-u="cntt@neu.edu.vn"><b>Ban tổ chức</b><span>cntt@neu.edu.vn</span></button>
           <button type="button" data-u="admin@neu.edu.vn"><b>Đơn vị quản lý</b><span>admin@neu.edu.vn</span></button>
+          <button type="button" data-u="quantri@neu.edu.vn"><b>Quản trị hệ thống</b><span>quantri@neu.edu.vn</span></button>
         </div>
       </details>
 
@@ -348,7 +349,7 @@
   });
 
   // ===== Kết nối API đăng nhập =====
-  const HOME = { student: '/events.html', organizer: '/manage-events.html', admin: '/moderation.html' };
+  const HOME = { student: '/events.html', organizer: '/manage-events.html', admin: '/moderation.html', sysadmin: '/system.html' };
   const alertBox = document.getElementById('alert');
   const btn = document.getElementById('submitBtn');
   const next = new URLSearchParams(location.search).get('next');
@@ -356,6 +357,10 @@
 
   // Đã đăng nhập thì chuyển thẳng vào trang chính
   fetch('/api/auth/me').then((r) => r.ok ? r.json() : null).then((d) => { if (d) go(d.user.role); }).catch(() => {});
+  // Thông báo bảo trì do Quản trị hệ thống bật
+  fetch('/api/auth/config').then((r) => r.ok ? r.json() : null).then((c) => {
+    if (c && c.maintenance && !alertBox.textContent) { alertBox.className = 'alert-box'; alertBox.textContent = `Đang bảo trì: ${c.maintenance_message}`; }
+  }).catch(() => {});
   if (new URLSearchParams(location.search).get('reset') === '1') { alertBox.className = 'alert-box ok'; alertBox.textContent = 'Đặt lại mật khẩu thành công. Vui lòng đăng nhập bằng mật khẩu mới.'; }
 
   document.querySelectorAll('.demo-list button').forEach((b) => b.addEventListener('click', () => {

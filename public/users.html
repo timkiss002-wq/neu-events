@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Người dùng & phân quyền – NEU Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="/img/favicon-neu.png" type="image/png">
+<link rel="stylesheet" href="/css/app.css">
+<link rel="stylesheet" href="/css/ui.css">
+<link rel="stylesheet" href="/css/enhance.css">
+<link rel="stylesheet" href="/css/system.css">
+</head>
+<body>
+
+<!-- Sidebar & header được dựng bởi /js/app.js theo tài khoản đăng nhập -->
+<aside class="sidebar" aria-label="Điều hướng chính"></aside>
+<div class="scrim" id="scrim"></div>
+<header class="header"></header>
+
+<div class="main">
+  <main class="container">
+    <div class="crumbs">NEU Events <span>/</span> Quản trị hệ thống <span>/</span> <b>Người dùng & phân quyền</b></div>
+    <div class="page-head">
+      <div>
+        <h1>Người dùng &amp; phân quyền</h1>
+        <p>Cấp tài khoản cho sinh viên, ban tổ chức, đơn vị quản lý và quản trị hệ thống; phân quyền, khóa/mở khóa, đặt lại mật khẩu.</p>
+      </div>
+      <div class="head-actions">
+        <button class="btn-primary" id="addBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+          Cấp tài khoản mới
+        </button>
+      </div>
+    </div>
+    <section class="stats" id="stats"><div class="loading"><span class="spinner"></span></div></section>
+
+    <section class="card sec-gap">
+      <div class="tabs" id="viewTabs" style="margin-top:0">
+        <button class="tab active" data-view="list">Danh sách người dùng</button>
+        <button class="tab" data-view="matrix">Ma trận phân quyền</button>
+      </div>
+
+      <div id="view-list">
+        <div class="filters">
+          <div class="search">
+            <input type="text" id="kw" placeholder="Tìm họ tên, mã, email hoặc đơn vị">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+          </div>
+          <select class="select" id="fRole" aria-label="Vai trò">
+            <option value="">Tất cả vai trò</option>
+            <option value="student">Sinh viên</option>
+            <option value="organizer">Ban tổ chức</option>
+            <option value="admin">Đơn vị quản lý</option>
+            <option value="sysadmin">Quản trị hệ thống</option>
+          </select>
+          <select class="select" id="fStatus" aria-label="Trạng thái">
+            <option value="">Mọi trạng thái</option>
+            <option value="active">Đang hoạt động</option>
+            <option value="disabled">Đã khóa</option>
+            <option value="temp">Tạm khóa đăng nhập</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th style="width:28%">Người dùng</th><th>Vai trò</th><th>Email đăng nhập</th><th>Trạng thái</th><th style="width:24%">Thao tác</th></tr></thead>
+            <tbody id="rows"><tr><td colspan="5"><div class="loading"><span class="spinner"></span></div></td></tr></tbody>
+          </table>
+        </div>
+        <div class="table-foot"><div class="count" id="count"></div><div class="pager" id="pager"></div></div>
+      </div>
+
+      <div id="view-matrix" hidden>
+        <div class="hint" style="margin-top:0">Hệ thống gồm 4 phân hệ. Mỗi tài khoản chỉ dùng các chức năng của vai trò được cấp; quyền được kiểm tra ở cả giao diện và máy chủ (API).</div>
+        <div class="role-cards" id="roleCards"></div>
+        <div class="table-wrap" style="margin-top:16px">
+          <table class="tbl matrix" id="matrix"></table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <footer class="footer"></footer>
+</div>
+
+<script src="/js/app.js"></script>
+<script src="/js/pages/users.js"></script>
+</body>
+</html>

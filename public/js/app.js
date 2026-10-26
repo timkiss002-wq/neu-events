@@ -54,6 +54,10 @@
     history: '<path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/>',
     mail: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/>',
     phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
+    server: '<rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/><path d="M7 6.5h.01M7 17.5h.01M11 6.5h6M11 17.5h6"/>',
+    settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+    database: '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
+    activity: '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
     building: '<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01M8 14h.01M16 14h.01M12 14h.01"/>',
   };
   const icon = (name, attrs = '') =>
@@ -98,7 +102,28 @@
   };
   const tag = (key, text) => { const [t, c] = STATUS[key] || [key, '']; return `<span class="st ${c}">${esc(text || t)}</span>`; };
   const phaseTag = (e) => (e.status === 'approved' ? tag(e.phase) : tag(e.status));
-  const ROLE = { student: 'Sinh viên', organizer: 'Ban tổ chức', admin: 'Đơn vị quản lý' };
+  const ROLE = { student: 'Sinh viên', organizer: 'Ban tổ chức', admin: 'Đơn vị quản lý', sysadmin: 'Quản trị hệ thống' };
+  // Nhãn mã thao tác trong nhật ký hệ thống: [tên, màu nhãn]
+  const ACTION = {
+    'auth.login': ['Đăng nhập', 'green'], 'auth.logout': ['Đăng xuất', 'gray'], 'auth.login_failed': ['Đăng nhập sai', 'amber'],
+    'auth.lockout': ['Tạm khóa đăng nhập', 'red'], 'auth.reset_password': ['Đặt lại mật khẩu', 'amber'],
+    'user.change_password': ['Đổi mật khẩu', ''], 'user.update_profile': ['Cập nhật hồ sơ', ''],
+    'account.create': ['Cấp tài khoản', 'navy'], 'account.update': ['Sửa tài khoản', 'navy'], 'account.role': ['Phân quyền', 'violet'],
+    'account.disable': ['Khóa tài khoản', 'red'], 'account.enable': ['Mở khóa tài khoản', 'green'],
+    'session.revoke': ['Buộc đăng xuất', 'red'],
+    'system.settings': ['Cấu hình hệ thống', 'violet'], 'system.settings_reset': ['Khôi phục cấu hình', 'violet'],
+    'system.maintenance_on': ['Bật bảo trì', 'red'], 'system.maintenance_off': ['Tắt bảo trì', 'green'],
+    'system.backup': ['Sao lưu CSDL', 'navy'], 'system.backup_download': ['Tải bản sao lưu', 'navy'], 'system.backup_delete': ['Xóa bản sao lưu', 'red'],
+    'system.audit_export': ['Xuất nhật ký', 'gray'],
+    'event.create': ['Tạo hồ sơ', ''], 'event.update': ['Sửa hồ sơ', ''], 'event.submit': ['Gửi duyệt', ''], 'event.withdraw': ['Rút về nháp', 'gray'],
+    'event.delete': ['Xóa hồ sơ', 'red'], 'event.approve': ['Phê duyệt', 'green'], 'event.reject': ['Từ chối hồ sơ', 'red'], 'event.cancel': ['Hủy sự kiện', 'red'],
+    'registration.create': ['Đăng ký', ''], 'registration.cancel': ['Hủy đăng ký', 'gray'],
+    'attendance.checkin': ['Check-in', 'green'], 'attendance.checkout': ['Check-out', 'green'], 'attendance.manual': ['Sửa điểm danh', 'amber'],
+    'attendance.open_checkin': ['Mở check-in', ''], 'attendance.open_checkout': ['Mở check-out', ''], 'attendance.close': ['Đóng điểm danh', 'gray'], 'attendance.close_checkout': ['Đóng check-out', 'gray'],
+    'points.submit': ['Gửi duyệt điểm', ''], 'points.approve': ['Duyệt điểm', 'green'], 'points.reject': ['Từ chối điểm', 'red'],
+    'review.create': ['Đánh giá', ''], 'review.update': ['Sửa đánh giá', ''],
+  };
+  const actionTag = (a) => { const [t, c] = ACTION[a] || [a, 'gray']; return `<span class="st ${c}">${esc(t)}</span>`; };
   const LEVEL = { truong: 'Cấp Trường', khoa: 'Cấp Khoa/Viện', clb: 'Cấp Chi đoàn/CLB' };
 
   // Ảnh bìa mặc định theo loại sự kiện
@@ -187,7 +212,7 @@
   const loadingHtml = '<div class="loading"><span class="spinner"></span></div>';
 
   // ---------------- Layout: sidebar + header ----------------
-  const HOME = { student: '/events.html', organizer: '/manage-events.html', admin: '/moderation.html' };
+  const HOME = { student: '/events.html', organizer: '/manage-events.html', admin: '/moderation.html', sysadmin: '/system.html' };
 
   // Menu bên trái: chỉ hiện các mục tài khoản có quyền sử dụng
   function sidebarHtml(user, active, badges) {
@@ -196,13 +221,29 @@
       const b = badges[key] ? `<span class="count-badge">${badges[key]}</span>` : '';
       return `<a href="${href}" class="nav-item ${active === key ? 'active' : ''}">${icon(ic)}${label}${b}</a>`;
     };
+    // Phân hệ Quản trị hệ thống: menu riêng, không tham gia nghiệp vụ sự kiện
+    if (r === 'sysadmin') {
+      return `
+      <a href="${HOME[r]}" class="brand"><img class="brand-logo-img" src="/img/logo-neu.png" alt="Logo Trường Đại học Kinh tế Quốc dân"><div><div class="brand-name">NEU Events</div><div class="brand-sub">Đại học Kinh tế Quốc dân</div></div></a>
+      <nav class="nav nav-main">
+        ${item('system', '/system.html', 'Tổng quan hệ thống', 'server')}
+        ${item('users', '/users.html', 'Người dùng & phân quyền', 'users')}
+        ${item('settings', '/settings.html', 'Cấu hình hệ thống', 'settings')}
+        ${item('security', '/security.html', 'An ninh & dữ liệu', 'shield')}
+      </nav>
+      <div class="support">
+        <div class="group-title">Cần hỗ trợ?</div>
+        <a href="/guide.html" class="nav-item ${active === 'guide' ? 'active' : ''}">${icon('help')}Hướng dẫn sử dụng</a>
+        <a href="mailto:events@neu.edu.vn" class="mail">events@neu.edu.vn</a>
+      </div>
+      <div class="logout"><a href="#" class="nav-item" data-logout>${icon('logout')}Đăng xuất</a></div>`;
+    }
     const manage = r === 'student' ? '' : `
       <nav class="nav nav-manage">
         ${item('manage', '/manage-events.html', 'Quản lý sự kiện', 'folder')}
         ${r === 'admin' ? item('moderation', '/moderation.html', 'Kiểm duyệt', 'shield') : ''}
         ${r === 'admin' ? item('points', '/points.html', 'Duyệt điểm Đoàn', 'gift') : ''}
         ${item('reports', '/reports.html', 'Báo cáo – thống kê', 'chart')}
-        ${r === 'admin' ? item('accounts', '/accounts.html', 'Tài khoản đơn vị', 'users') : ''}
       </nav>`;
     return `
       <a href="${HOME[r]}" class="brand"><img class="brand-logo-img" src="/img/logo-neu.png" alt="Logo Trường Đại học Kinh tế Quốc dân"><div><div class="brand-name">NEU Events</div><div class="brand-sub">Đại học Kinh tế Quốc dân</div></div></a>
@@ -224,6 +265,7 @@
   function displayOf(user) {
     if (user.role === 'student') return { name: user.full_name, sub: `MSSV: ${user.code}`, av: initials(user.full_name) };
     if (user.role === 'organizer') return { name: user.unit_short || user.unit_name || user.full_name, sub: 'Ban tổ chức', av: 'BTC', title: user.unit_name };
+    if (user.role === 'sysadmin') return { name: user.full_name, sub: 'Quản trị hệ thống', av: 'QT' };
     return { name: 'Đơn vị quản lý', sub: user.unit_short || user.unit_name || '', av: 'QL' };
   }
 
@@ -337,7 +379,7 @@
   function download(url) { const a = document.createElement('a'); a.href = url; document.body.appendChild(a); a.click(); a.remove(); }
 
   window.App = {
-    api, init, toast, modal, setTerm, displayOf, fixCrumbs, confirmBox, askReason, download, logout, HOME, ROLE, LEVEL,
+    api, init, toast, modal, setTerm, displayOf, fixCrumbs, confirmBox, askReason, download, logout, HOME, ROLE, LEVEL, ACTION, actionTag,
     icon, stars, esc, nl2br, fmtDate, fmtShort, fmtTime, fmtDateTime, fmtLongDate, weekday, fmtRange, fmtNum, fmtPct, fmtMoney, fmtSize,
     initials, ago, toInput, param, tag, phaseTag, coverOf, coverBg, emptyState, loadingHtml, toDate,
   };

@@ -115,3 +115,19 @@ curl -b ck.txt -H "Content-Type: application/json" -d '{"event_id":8,"code":"AI1
 | POST | `/api/admin/points/:eventId/approve\|reject` | QL | Duyệt (cộng điểm) / từ chối `{note}` |
 | GET/POST | `/api/admin/accounts` | QL | Danh sách / cấp tài khoản BTC `{unit_id \| unit_name, unit_short, email, password, phone}` |
 | PUT | `/api/admin/accounts/:id` | QL | `{email?, password?, is_active?}` |
+
+## Quản trị hệ thống (`/api/system`, vai trò `sysadmin`)
+
+| Phương thức | Đường dẫn | Mô tả |
+|---|---|---|
+| GET | `/api/system/overview` | Tổng quan máy chủ, CSDL, tài khoản, cảnh báo an ninh |
+| GET / POST | `/api/system/users` | Danh sách (lọc `role`, `status`, `kw`, `page`) / cấp tài khoản mới |
+| PUT | `/api/system/users/:id` | Sửa thông tin, `role`, `is_active`, `password`, `unlock` |
+| GET | `/api/system/permissions` | Ma trận phân quyền 4 phân hệ |
+| GET / PUT | `/api/system/settings` | Đọc / ghi tham số cấu hình (`{ values: {...} }`) |
+| POST | `/api/system/settings/reset` | Khôi phục mặc định |
+| GET | `/api/system/audit`, `/api/system/audit/export` | Nhật ký hệ thống (lọc `group`, `from`, `to`, `kw`) / xuất Excel |
+| GET / DELETE | `/api/system/sessions`, `/api/system/sessions/:sid` | Phiên đăng nhập / buộc đăng xuất |
+| GET / POST | `/api/system/backups` | Danh sách / tạo bản sao lưu |
+| GET / DELETE | `/api/system/backups/:name/download`, `/api/system/backups/:name` | Tải / xóa bản sao lưu |
+| GET | `/api/auth/config` | (công khai) Tên hệ thống, email hỗ trợ, trạng thái bảo trì |

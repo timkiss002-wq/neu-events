@@ -6,7 +6,7 @@ const QRCode = require('qrcode');
 const ExcelJS = require('exceljs');
 const { q } = require('../db/database');
 const { now, addMinutes, randomCode, notify, audit, wrap, fail } = require('../lib/util');
-const { CHECKOUT_GRACE, EVENT_SELECT, decorate, getEvent, mustManage, closeAttendance, finalizeEndedEvents, activeSession } = require('../lib/events');
+const { checkoutGrace, checkinLead, EVENT_SELECT, decorate, getEvent, mustManage, closeAttendance, finalizeEndedEvents, activeSession } = require('../lib/events');
 const { requireAuth, requireRole } = require('../middleware/auth');
 
 const router = express.Router();
@@ -120,8 +120,8 @@ router.get('/:eventId', wrap(async (req, res) => {
   const at = now();
   res.json({
     event: ev, session, qr, last_session: last || null, submission,
-    can_open_checkin: at >= addMinutes(ev.start_at, -60) && at <= ev.end_at,
-    can_open_checkout: at >= ev.start_at && at <= addMinutes(ev.end_at, CHECKOUT_GRACE),
+    can_open_checkin: at >= addMinutes(ev.start_at, -checkinLead()) && at <= ev.end_at,
+    can_open_checkout: at >= ev.start_at && at <= addMinutes(ev.end_at, checkoutGrace()),
     stats: {
       registered: ev.registered_count, present: ev.present_count, completed: ev.completed_count,
       checked_in: ev.present_count - ev.completed_count, absent: ev.absent_count,
@@ -140,13 +140,13 @@ router.post('/:eventId/open', wrap((req, res) => {
   const at = now();
   let limit;
   if (kind === 'checkin') {
-    if (at < addMinutes(ev.start_at, -60)) fail(400, 'Chỉ mở check-in trong vòng 60 phút trước giờ bắt đầu.');
+    if (at < addMinutes(ev.start_at, -checkinLead())) fail(400, `Chỉ mở check-in trong vòng ${checkinLead()} phút trước giờ bắt đầu.`);
     if (at > ev.end_at) fail(400, 'Sự kiện đã kết thúc, không thể mở check-in.');
     limit = ev.end_at;
   } else {
     if (at < ev.start_at) fail(400, 'Chỉ mở check-out sau khi sự kiện bắt đầu.');
-    limit = addMinutes(ev.end_at, CHECKOUT_GRACE);
-    if (at > limit) fail(400, `Đã quá ${CHECKOUT_GRACE} phút sau khi sự kiện kết thúc, không thể mở check-out.`);
+    limit = addMinutes(ev.end_at, checkoutGrace());
+    if (at > limit) fail(400, `Đã quá ${checkoutGrace()} phút sau khi sự kiện kết thúc, không thể mở check-out.`);
   }
   const minutes = Math.min(600, Math.max(5, parseInt(req.body?.minutes, 10) || 45));
   let expires = addMinutes(at, minutes); if (expires > limit) expires = limit;

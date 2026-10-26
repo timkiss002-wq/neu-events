@@ -17,12 +17,32 @@ const NEW_COLUMNS = [
   ['registrations', 'points_awarded', 'INTEGER'],
   ['attendance_sessions', 'kind', "TEXT NOT NULL DEFAULT 'checkin'"],
   ['reviews', 'is_anonymous', 'INTEGER NOT NULL DEFAULT 0'],
+  ['users', 'failed_logins', 'INTEGER NOT NULL DEFAULT 0'],
+  ['users', 'locked_until', 'TEXT'],
 ];
+
+// CSDL cũ chỉ cho phép 3 vai trò → dựng lại bảng users để thêm vai trò 'sysadmin' (Quản trị hệ thống)
+function upgradeUserRoles(d) {
+  const row = d.prepare("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'users'").get();
+  if (!row || row.sql.includes('sysadmin')) return;
+  const ddl = row.sql
+    .replace(/role IN \('student',\s*'organizer',\s*'admin'\)/, "role IN ('student','organizer','admin','sysadmin')")
+    .replace(/^CREATE TABLE\s+(IF NOT EXISTS\s+)?["`]?users["`]?/i, 'CREATE TABLE users_new');
+  const cols = d.prepare('PRAGMA table_info(users)').all().map((c) => c.name).join(', ');
+  d.exec('PRAGMA foreign_keys = OFF;');
+  d.exec('BEGIN');
+  try {
+    d.exec(ddl);
+    d.exec(`INSERT INTO users_new (${cols}) SELECT ${cols} FROM users; DROP TABLE users; ALTER TABLE users_new RENAME TO users;`);
+    d.exec('COMMIT');
+  } catch (e) { d.exec('ROLLBACK'); throw e; } finally { d.exec('PRAGMA foreign_keys = ON;'); }
+}
 function migrate(d) {
   for (const [table, col, def] of NEW_COLUMNS) {
     const cols = d.prepare(`PRAGMA table_info(${table})`).all();
     if (cols.length && !cols.find((c) => c.name === col)) d.exec(`ALTER TABLE ${table} ADD COLUMN ${col} ${def}`);
   }
+  upgradeUserRoles(d);
 }
 
 function open() {
@@ -55,4 +75,4 @@ const q = {
 
 function close() { if (db) { db.close(); db = null; } }
 
-module.exports = { open, close, q, DB_PATH };
+module.exports = { open, close, q, DB_PATH, DATA_DIR };

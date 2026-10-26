@@ -17,19 +17,21 @@ CREATE TABLE IF NOT EXISTS categories (
   color  TEXT
 );
 
--- Người dùng: sinh viên / ban tổ chức / đơn vị quản lý
+-- Người dùng: sinh viên / ban tổ chức / đơn vị quản lý / quản trị hệ thống
 CREATE TABLE IF NOT EXISTS users (
   id             INTEGER PRIMARY KEY AUTOINCREMENT,
   code           TEXT NOT NULL UNIQUE,            -- MSSV hoặc mã cán bộ
   email          TEXT NOT NULL UNIQUE,
   password_hash  TEXT NOT NULL,
   full_name      TEXT NOT NULL,
-  role           TEXT NOT NULL CHECK (role IN ('student','organizer','admin')),
+  role           TEXT NOT NULL CHECK (role IN ('student','organizer','admin','sysadmin')),
   unit_id        INTEGER REFERENCES units(id),
   class_name     TEXT,                            -- lớp (sinh viên)
   position       TEXT,                            -- chức vụ (cán bộ)
   phone          TEXT,
   is_active      INTEGER NOT NULL DEFAULT 1,
+  failed_logins  INTEGER NOT NULL DEFAULT 0,      -- số lần nhập sai mật khẩu liên tiếp
+  locked_until   TEXT,                            -- tạm khóa đăng nhập đến thời điểm này
   created_at     TEXT NOT NULL
 );
 
@@ -185,6 +187,15 @@ CREATE TABLE IF NOT EXISTS point_submissions (
   review_note   TEXT
 );
 
+-- Cấu hình hệ thống (Quản trị hệ thống thiết lập)
+CREATE TABLE IF NOT EXISTS settings (
+  key         TEXT PRIMARY KEY,
+  value       TEXT NOT NULL,
+  updated_by  INTEGER REFERENCES users(id),
+  updated_at  TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_audit_action    ON audit_logs(action, created_at);
 CREATE INDEX IF NOT EXISTS idx_events_status   ON events(status);
 CREATE INDEX IF NOT EXISTS idx_events_start    ON events(start_at);
 CREATE INDEX IF NOT EXISTS idx_reg_event       ON registrations(event_id);

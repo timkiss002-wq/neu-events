@@ -64,14 +64,15 @@
       <nav class="card toc" aria-label="Mục lục" id="toc"><b>Mục lục</b></nav>
 
       <div class="g-body">
-        <section class="card" id="bat-dau" data-roles="guest student organizer admin">
+        <section class="card" id="bat-dau" data-roles="guest student organizer admin sysadmin">
           <h3>Bắt đầu</h3>
           <p data-roles="guest student">Sinh viên đăng nhập bằng <b>MSSV hoặc email NEU</b> và mật khẩu.</p>
-          <p data-roles="guest organizer admin">Ban tổ chức đăng nhập bằng <b>email đơn vị (đuôi @neu.edu.vn)</b> do Đơn vị quản lý cấp. Sau khi đăng nhập, đơn vị có thể đổi email, mật khẩu tại <i>Hồ sơ cá nhân</i>.</p>
-          <div class="roles" data-roles="guest organizer admin">
+          <p data-roles="guest organizer admin sysadmin">Ban tổ chức đăng nhập bằng <b>email đơn vị (đuôi @neu.edu.vn)</b> do Quản trị hệ thống cấp. Sau khi đăng nhập, đơn vị có thể đổi email, mật khẩu tại <i>Hồ sơ cá nhân</i>.</p>
+          <div class="roles" data-roles="guest organizer admin sysadmin">
             <div><span class="st">Sinh viên</span><p>Khám phá, đăng ký sự kiện, check-in/check-out, đánh giá và tích lũy điểm hoạt động.</p></div>
             <div><span class="st navy">Ban tổ chức</span><p>Tạo hồ sơ sự kiện, quản lý điểm danh, xem phản hồi, thống kê và gửi danh sách nhận điểm.</p></div>
-            <div><span class="st green">Đơn vị quản lý</span><p>Kiểm duyệt hồ sơ, cấp tài khoản đơn vị, duyệt điểm hoạt động và xem báo cáo toàn trường.</p></div>
+            <div><span class="st green">Đơn vị quản lý</span><p>Kiểm duyệt nội dung trước khi công khai, duyệt điểm hoạt động, giám sát tiến độ và trích xuất báo cáo toàn trường.</p></div>
+            <div><span class="st violet">Quản trị hệ thống</span><p>Quản lý người dùng và phân quyền, cấu hình hệ thống, bảo đảm an toàn an ninh dữ liệu và hạ tầng.</p></div>
           </div>
           <p>Ô <b>học kỳ</b> trên thanh đầu trang dùng để chọn học kỳ cần xem; có thể chọn các học kỳ của năm học trước để tra cứu lại.</p>
           <p>Quên mật khẩu: chọn <a class="link" href="/forgot-password.html">Quên mật khẩu?</a> ở trang đăng nhập, nhập MSSV/email để nhận mã xác nhận 6 số (hiệu lực 15 phút), rồi đặt mật khẩu mới.</p>
@@ -136,9 +137,30 @@
           <p>Mục <i>Duyệt điểm hoạt động</i> liệt kê các danh sách do ban tổ chức gửi. Mở từng danh sách để xem sinh viên hoàn thành (giờ check-in, check-out), sau đó <b>Duyệt</b> để cộng điểm theo cấp chương trình hoặc <b>Từ chối</b> kèm lý do để ban tổ chức rà soát, gửi lại.</p>
         </section>
 
-        <section class="card" id="tai-khoan" data-roles="admin">
-          <h3>Tài khoản đơn vị</h3>
-          <p>Khi một đơn vị đăng ký sử dụng hệ thống, vào <i>Tài khoản đơn vị → Cấp tài khoản</i>: chọn đơn vị có sẵn hoặc nhập đơn vị mới, cấp email @neu.edu.vn và mật khẩu ban đầu. Có thể đổi email, đặt lại mật khẩu, khóa/mở khóa tài khoản bất cứ lúc nào.</p>
+        <section class="card" id="nguoi-dung" data-roles="sysadmin">
+          <h3>Người dùng &amp; phân quyền</h3>
+          <ol class="steps">
+            <li><b>Cấp tài khoản</b> — <i>Người dùng &amp; phân quyền → Cấp tài khoản mới</i>: chọn vai trò (Sinh viên, Ban tổ chức, Đơn vị quản lý, Quản trị hệ thống). Tài khoản cán bộ/đơn vị bắt buộc email @neu.edu.vn, mã đăng nhập được tự sinh.</li>
+            <li><b>Phân quyền</b> — chuyển vai trò giữa các tài khoản cán bộ (bắt buộc ghi lý do). Tài khoản sinh viên gắn với MSSV nên giữ nguyên vai trò. Hệ thống luôn giữ ít nhất một Quản trị hệ thống đang hoạt động.</li>
+            <li><b>Khóa / mở khóa, đặt lại mật khẩu</b> — tài khoản bị khóa bị đăng xuất ngay. Tài khoản nhập sai mật khẩu quá số lần quy định bị <i>tạm khóa đăng nhập</i>; có thể <i>Gỡ tạm khóa</i> sớm.</li>
+            <li><b>Ma trận phân quyền</b> — tab <i>Ma trận phân quyền</i> liệt kê chức năng của 4 phân hệ và vai trò được sử dụng.</li>
+          </ol>
+        </section>
+
+        <section class="card" id="cau-hinh" data-roles="sysadmin">
+          <h3>Cấu hình hệ thống</h3>
+          <p>Trang <i>Cấu hình hệ thống</i> gồm 4 nhóm tham số: thông tin chung (tên hệ thống, email hỗ trợ, <b>chế độ bảo trì</b>), sự kiện &amp; điểm danh (khung giờ mở check-in/check-out, điểm hoạt động mặc định theo cấp), bảo mật đăng nhập (độ dài mật khẩu, số lần nhập sai, thời gian tạm khóa, tự đăng xuất khi không thao tác) và sao lưu. Thay đổi có hiệu lực ngay và được ghi nhật ký.</p>
+          <div class="tip-box"><b>Chế độ bảo trì:</b> khi bật, mọi tài khoản không phải Quản trị hệ thống bị đăng xuất và trang đăng nhập hiển thị thông báo bảo trì.</div>
+        </section>
+
+        <section class="card" id="an-ninh" data-roles="sysadmin">
+          <h3>An ninh &amp; dữ liệu</h3>
+          <ul class="bul">
+            <li><b>Tổng quan hệ thống</b>: trạng thái máy chủ, dung lượng và kiểm tra toàn vẹn CSDL, số tài khoản theo vai trò, cảnh báo an ninh 24 giờ.</li>
+            <li><b>Nhật ký hệ thống</b>: tra cứu mọi thao tác theo nhóm, thời gian, từ khóa; xuất Excel.</li>
+            <li><b>Phiên đăng nhập</b>: xem ai đang đăng nhập, IP, thiết bị; buộc đăng xuất phiên đáng ngờ.</li>
+            <li><b>Sao lưu dữ liệu</b>: tạo bản sao lưu CSDL tức thời (an toàn khi hệ thống đang chạy), tải về hoặc xóa bản cũ.</li>
+          </ul>
         </section>
 
         <section class="card" id="bao-cao" data-roles="organizer admin">
@@ -148,7 +170,7 @@
           <p><b>Cách tính:</b> tỷ lệ tham dự = lượt tham dự / lượt đăng ký của các sự kiện <b>đã kết thúc</b>; sự kiện đã hủy không tính; “—” là chưa có dữ liệu.</p>
         </section>
 
-        <section class="card" id="quy-dinh" data-roles="guest student organizer admin">
+        <section class="card" id="quy-dinh" data-roles="guest student organizer admin sysadmin">
           <h3>Quy định sử dụng</h3>
           <ul class="bul">
             <li>Mỗi tài khoản chỉ dùng cho cá nhân/đơn vị được cấp; không chia sẻ mật khẩu hay mã điểm danh cho người không có mặt tại sự kiện.</li>
@@ -158,22 +180,26 @@
           </ul>
         </section>
 
-        <section class="card" id="bao-mat" data-roles="guest student organizer admin">
+        <section class="card" id="bao-mat" data-roles="guest student organizer admin sysadmin">
           <h3>Bảo mật &amp; dữ liệu</h3>
           <ul class="bul">
-            <li>Mật khẩu được mã hóa một chiều (bcrypt); phiên đăng nhập dùng cookie HttpOnly.</li>
+            <li>Mật khẩu được mã hóa một chiều (bcrypt); phiên đăng nhập dùng cookie HttpOnly và tự hết hạn khi không thao tác.</li>
+            <li>Nhập sai mật khẩu nhiều lần liên tiếp, tài khoản bị tạm khóa đăng nhập trong một khoảng thời gian.</li>
             <li>Mỗi thao tác quan trọng (duyệt, từ chối, sửa điểm danh, cộng điểm, đổi mật khẩu…) được ghi vào nhật ký hệ thống.</li>
             <li>Dữ liệu cá nhân chỉ hiển thị cho ban tổ chức của sự kiện bạn đăng ký và đơn vị quản lý.</li>
+            <li>Quản trị hệ thống sao lưu cơ sở dữ liệu định kỳ và giám sát nhật ký để phát hiện truy cập bất thường.</li>
           </ul>
         </section>
 
-        <section class="card" id="hoi-dap" data-roles="guest student organizer admin">
+        <section class="card" id="hoi-dap" data-roles="guest student organizer admin sysadmin">
           <h3>Câu hỏi thường gặp</h3>
           <details data-roles="guest student"><summary>Vì sao tôi không check-out được?</summary><p>Check-out chỉ thực hiện được khi ban tổ chức đã ghi nhận bạn check-in. Hãy liên hệ ban tổ chức nếu bạn có mặt nhưng chưa được ghi nhận.</p></details>
           <details data-roles="guest student"><summary>Khi nào tôi được cộng điểm hoạt động?</summary><p>Sau khi ban tổ chức gửi danh sách hoàn thành và Đơn vị quản lý duyệt; bạn sẽ nhận thông báo.</p></details>
           <details data-roles="guest student"><summary>Đánh giá ẩn danh có hiện tên không?</summary><p>Không. Ban tổ chức chỉ thấy “Sinh viên ẩn danh”.</p></details>
           <details data-roles="guest student"><summary>Có thể đăng ký lại sau khi hủy?</summary><p>Có, nếu sự kiện vẫn còn chỗ và chưa hết hạn đăng ký.</p></details>
           <details data-roles="organizer admin"><summary>Danh sách điểm bị từ chối thì làm gì?</summary><p>Xem lý do trong thông báo, rà soát lại điểm danh rồi bấm <i>Gửi danh sách nhận điểm</i> lần nữa.</p></details>
+          <details data-roles="guest student organizer admin"><summary>Tài khoản bị tạm khóa đăng nhập thì làm gì?</summary><p>Chờ hết thời gian tạm khóa rồi đăng nhập lại, hoặc dùng <i>Quên mật khẩu</i> để đặt mật khẩu mới (tài khoản được gỡ tạm khóa). Có thể liên hệ quản trị hệ thống để được hỗ trợ.</p></details>
+          <details data-roles="sysadmin"><summary>Khôi phục dữ liệu từ bản sao lưu như thế nào?</summary><p>Dừng máy chủ, chép file sao lưu đè lên <code>data/neu-events.db</code> (xóa file <code>-wal</code>, <code>-shm</code> nếu có), rồi chạy lại <code>npm start</code>.</p></details>
           <details data-roles="organizer admin"><summary>Sự kiện bị hủy có tính vắng mặt không?</summary><p>Không. Đăng ký của sự kiện bị hủy được chuyển sang trạng thái Đã hủy.</p></details>
           <p style="margin-top:14px">Cần hỗ trợ thêm? Liên hệ <a class="link" href="mailto:events@neu.edu.vn">events@neu.edu.vn</a>.</p>
         </section>

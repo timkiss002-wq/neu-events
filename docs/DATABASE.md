@@ -223,3 +223,9 @@ stateDiagram-v2
 - `point_submissions` (id, event_id UNIQUE, submitted_by, submitted_at, member_count, points, note, status `pending|approved|rejected`, reviewed_by, reviewed_at, review_note) – danh sách nhận điểm BTC gửi Đơn vị quản lý.
 
 Cơ sở dữ liệu cũ được tự động bổ sung cột khi khởi động (`db/database.js → migrate`).
+
+## Bổ sung cho phân hệ Quản trị hệ thống
+
+- `users.role` thêm giá trị `sysadmin` (Quản trị hệ thống); thêm cột `failed_logins` (số lần nhập sai liên tiếp) và `locked_until` (tạm khóa đăng nhập đến thời điểm).
+- Bảng mới `settings(key PK, value, updated_by → users.id, updated_at)`: tham số cấu hình hệ thống; tham số chưa có dòng dùng giá trị mặc định trong `lib/settings.js`.
+- CSDL cũ được tự nâng cấp khi khởi động (thêm cột, dựng lại bảng `users` để chấp nhận vai trò mới).

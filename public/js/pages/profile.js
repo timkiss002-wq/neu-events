@@ -11,11 +11,13 @@
     $('who').innerHTML = `<div class="big-av">${esc(d.av)}</div><h3>${esc(d.name)}</h3><div class="hint">${ROLE[u.role]}</div>
       <dl>
         <div><dt>${u.role === 'student' ? 'Mã số sinh viên' : 'Mã tài khoản'}</dt><dd>${esc(u.code)}</dd></div>
-        ${u.role === 'student' ? `<div><dt>Lớp</dt><dd>${esc(u.class_name || '—')}</dd></div>` : `<div><dt>Đơn vị</dt><dd>${esc(u.unit_name || '—')}</dd></div>`}
+        ${u.role === 'student' ? `<div><dt>Lớp</dt><dd>${esc(u.class_name || '—')}</dd></div>` : u.role === 'sysadmin' ? `<div><dt>Chức vụ</dt><dd>${esc(u.position || '—')}</dd></div>` : `<div><dt>Đơn vị</dt><dd>${esc(u.unit_name || '—')}</dd></div>`}
         <div><dt>Email</dt><dd>${esc(u.email)}</dd></div>
         <div><dt>Điện thoại</dt><dd>${esc(u.phone || '—')}</dd></div>
       </dl>`;
-    $('stats').innerHTML = u.role === 'student'
+    $('stats').innerHTML = u.role === 'sysadmin'
+      ? stat('Tài khoản hệ thống', fmtNum(s.users), `${fmtNum(s.active || 0)} đang hoạt động`, 'users') + stat('Đã khóa', fmtNum(s.locked || 0), 'Không thể đăng nhập', 'lock') + stat('Thao tác quản trị', fmtNum(s.actions || 0), 'Đã ghi nhật ký', 'history')
+      : u.role === 'student'
       ? stat('Lượt đăng ký', fmtNum(s.total), 'Tất cả học kỳ', 'ticket1') + stat('Hoàn thành', fmtNum(s.completed || 0), `${fmtNum(s.present || 0)} lượt check-in • ${fmtNum(s.absent || 0)} vắng`, 'check') + stat('Điểm hoạt động', fmtNum(s.points || 0), 'Đã được duyệt cộng', 'gift')
       : stat('Hồ sơ sự kiện', fmtNum(s.total), u.role === 'admin' ? 'Toàn trường' : 'Của đơn vị', 'folder') + stat('Đã duyệt', fmtNum(s.approved || 0), 'Đã công khai', 'check') + stat('Chờ duyệt', fmtNum(s.pending || 0), 'Đang trong hàng chờ', 'clock');
     const f = $('infoForm'); f.email.value = u.email; f.phone.value = u.phone || '';

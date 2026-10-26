@@ -1,6 +1,6 @@
 # NEU Events – Hệ thống quản lý sự kiện
 
-Website quản lý sự kiện cho Đại học Kinh tế Quốc dân: sinh viên khám phá – đăng ký – điểm danh – đánh giá; ban tổ chức tạo hồ sơ và quản lý điểm danh; đơn vị quản lý kiểm duyệt và xem báo cáo.
+Website quản lý sự kiện cho Đại học Kinh tế Quốc dân: sinh viên khám phá – đăng ký – điểm danh – đánh giá; ban tổ chức tạo hồ sơ và quản lý điểm danh; đơn vị quản lý kiểm duyệt và xem báo cáo; quản trị hệ thống quản lý người dùng – phân quyền, cấu hình và an ninh dữ liệu.
 
 - **Back-end:** Node.js + Express (REST API), phiên đăng nhập bằng cookie (express-session)
 - **CSDL:** SQLite – dùng module có sẵn `node:sqlite` của Node, **không cần cài server CSDL**
@@ -29,16 +29,17 @@ Mở trình duyệt: **http://localhost:3000**
 
 | Vai trò | Đăng nhập | Ghi chú |
 |---|---|---|
-| Sinh viên | `11240123` | Nguyễn Minh Anh – có đủ trạng thái: đã tham dự, vắng, đang diễn ra, sắp tới, bị hủy |
-| Sinh viên | `11244035` | Nguyễn Thị Thu |
+| Sinh viên | `11240123` | Thân Mậu Dũng – có đủ trạng thái: đã tham dự, vắng, đang diễn ra, sắp tới, bị hủy |
+| Sinh viên | `11244035` | Lê Văn Dũng |
 | Ban tổ chức | `cntt@neu.edu.vn` | LCĐ Khoa CNTT – sự kiện đang diễn ra, sắp tới, nháp; sự kiện “Python” đã kết thúc, chưa gửi danh sách điểm |
 | Ban tổ chức | `dmst@neu.edu.vn` | Viện ĐMST – có hồ sơ chờ duyệt |
 | Ban tổ chức | `clbkhoinghiep@neu.edu.vn` | CLB Khởi nghiệp – có hồ sơ bị từ chối |
-| Đơn vị quản lý | `admin@neu.edu.vn` | Kiểm duyệt, duyệt điểm Đoàn, cấp tài khoản đơn vị, báo cáo |
+| Đơn vị quản lý | `admin@neu.edu.vn` | Kiểm duyệt, duyệt điểm Đoàn, giám sát & báo cáo toàn trường |
+| Quản trị hệ thống | `quantri@neu.edu.vn` | Người dùng & phân quyền, cấu hình hệ thống, an ninh & sao lưu dữ liệu |
 
-Tài khoản Ban tổ chức là tài khoản của **đơn vị** (email bắt buộc đuôi `@neu.edu.vn`), do Đơn vị quản lý cấp. Sinh viên đăng nhập bằng MSSV hoặc email. Ở trang đăng nhập có mục “Tài khoản demo” để điền nhanh. Ngoài ra còn ~118 sinh viên ngẫu nhiên (MSSV từ `11240200`) để có số liệu thống kê.
+Tài khoản Ban tổ chức là tài khoản của **đơn vị** (email bắt buộc đuôi `@neu.edu.vn`), do Quản trị hệ thống cấp. Sinh viên đăng nhập bằng MSSV hoặc email. Ở trang đăng nhập có mục “Tài khoản demo” để điền nhanh. Ngoài ra còn ~118 sinh viên ngẫu nhiên (MSSV từ `11240200`) để có số liệu thống kê.
 
-## 3. Chức năng theo vai trò
+## 3. Chức năng theo phân hệ (4 phân hệ)
 
 **Sinh viên**
 - Khám phá sự kiện: tìm kiếm, lọc theo trạng thái / loại / đơn vị.
@@ -59,8 +60,13 @@ Tài khoản Ban tổ chức là tài khoản của **đơn vị** (email bắt 
 - **Kiểm duyệt:** thống kê, danh sách hồ sơ, xem chi tiết + tải file, đánh dấu tiêu chí, phê duyệt hoặc từ chối (bắt buộc lý do), lịch sử hồ sơ.
 - **Báo cáo – thống kê:** lọc khoảng thời gian / đơn vị / loại; 4 chỉ số, biểu đồ theo tuần (tháng khi > 10 tuần), biểu đồ cơ cấu, bảng hiệu quả; **xuất Excel** 4 trang tính.
 - **Duyệt điểm Đoàn:** duyệt hoặc từ chối (kèm lý do) danh sách sinh viên hoàn thành do BTC gửi; khi duyệt, điểm được cộng theo cấp chương trình và gửi thông báo.
-- **Tài khoản đơn vị:** cấp tài khoản Ban tổ chức (email @neu.edu.vn + mật khẩu) cho đơn vị mới đăng ký sử dụng; đổi email, đặt lại mật khẩu, khóa/mở khóa.
 - Quản lý / xem toàn bộ sự kiện của các đơn vị.
+
+**Quản trị hệ thống**
+- **Tổng quan hệ thống:** trạng thái máy chủ (uptime, Node.js, bộ nhớ), dung lượng & kiểm tra toàn vẹn CSDL, tài khoản theo vai trò, cảnh báo an ninh 24 giờ.
+- **Người dùng & phân quyền:** cấp tài khoản cho cả 4 vai trò, sửa thông tin, **đổi vai trò** (bắt buộc lý do), khóa/mở khóa, đặt lại mật khẩu, gỡ tạm khóa; **ma trận phân quyền** 4 phân hệ.
+- **Cấu hình hệ thống:** tên hệ thống, email hỗ trợ, **chế độ bảo trì**, khung giờ check-in/check-out, điểm hoạt động theo cấp, độ dài mật khẩu, số lần nhập sai trước khi tạm khóa, thời gian tạm khóa, tự đăng xuất khi không thao tác, số bản sao lưu giữ lại.
+- **An ninh & dữ liệu:** nhật ký hệ thống (lọc, tìm kiếm, xuất Excel), phiên đăng nhập đang hoạt động (IP, thiết bị, **buộc đăng xuất**), **sao lưu CSDL** (`VACUUM INTO`, tải về, xóa).
 
 **Chung:** thông báo trong hệ thống (chuông), hồ sơ cá nhân, đổi mật khẩu, quên mật khẩu (mã 6 số), lịch sử thao tác (audit log), hướng dẫn sử dụng, giao diện responsive cho điện thoại.
 
@@ -86,14 +92,16 @@ Khi mở trang bằng `localhost`, mã QR tự dùng **địa chỉ LAN** của 
 neu-events/
 ├── server.js              # Khởi tạo Express, gắn route, phục vụ giao diện
 ├── db/
-│   ├── schema.sql         # Lược đồ CSDL (11 bảng)
+│   ├── schema.sql         # Lược đồ CSDL (12 bảng)
 │   ├── database.js        # Kết nối node:sqlite + tiện ích truy vấn/transaction
 │   └── seed.js            # Dữ liệu mẫu (npm run seed)
 ├── middleware/auth.js     # Nạp người dùng từ session, kiểm tra vai trò
 ├── lib/
 │   ├── util.js            # Thời gian, học kỳ, thông báo, audit log, lỗi HTTP
-│   └── events.js          # Truy vấn sự kiện, phân quyền, chốt điểm danh
-├── routes/                # REST API: auth, events, me, attendance, moderation, reviews, reports
+│   ├── events.js          # Truy vấn sự kiện, phân quyền, chốt điểm danh
+│   ├── settings.js        # Tham số cấu hình hệ thống (bảng settings)
+│   └── permissions.js     # Ma trận phân quyền 4 phân hệ
+├── routes/                # REST API: auth, events, me, attendance, moderation, reviews, reports, admin, system
 ├── public/                # Giao diện
 │   ├── *.html             # 14 trang (6 trang theo thiết kế gốc + 8 trang bổ sung)
 │   ├── css/app.css        # Layout & thành phần dùng chung (trích từ thiết kế)
@@ -118,6 +126,10 @@ neu-events/
 | Quản lý sự kiện | `manage-events.html` | BTC / QL | Bổ sung |
 | Tạo / sửa hồ sơ | `event-form.html` | BTC / QL | Bổ sung |
 | Hồ sơ cá nhân | `profile.html` | Tất cả | Bổ sung |
+| Tổng quan hệ thống | `system.html` | Quản trị hệ thống | Bổ sung |
+| Người dùng & phân quyền | `users.html` | Quản trị hệ thống | Bổ sung |
+| Cấu hình hệ thống | `settings.html` | Quản trị hệ thống | Bổ sung |
+| An ninh & dữ liệu | `security.html` | Quản trị hệ thống | Bổ sung |
 | Hướng dẫn sử dụng | `guide.html` | Công khai | Bổ sung |
 | Quên mật khẩu | `forgot-password.html` | Công khai | Bổ sung |
 
@@ -130,11 +142,14 @@ neu-events/
 5. **cntt@neu.edu.vn** → *Điểm danh* → sự kiện “Ứng dụng AI…” → *Mở check-in*, trình chiếu QR.
 6. **11240123** → *Điểm danh* → nhập mã check-in. BTC *Chuyển sang check-out* → sinh viên nhập mã check-out → *Hoàn thành*.
 7. **cntt@neu.edu.vn** → sự kiện “Seminar Python” → *Xuất danh sách hoàn thành* → *Gửi danh sách nhận điểm*.
-8. **admin@neu.edu.vn** → *Duyệt điểm Đoàn* → duyệt; *Tài khoản đơn vị* → *Cấp tài khoản mới*.
+8. **admin@neu.edu.vn** → *Duyệt điểm Đoàn* → duyệt.
 9. **11240123** → *Đánh giá* (thử ẩn danh); **cntt@neu.edu.vn** → *Đánh giá*, *Báo cáo – thống kê* → *Xuất báo cáo*.
+
+10. **quantri@neu.edu.vn** → *Người dùng & phân quyền* → *Cấp tài khoản mới*, thử *Phân quyền*; nhập sai mật khẩu 5 lần với một tài khoản để thấy tạm khóa → *Gỡ tạm khóa*; *Cấu hình hệ thống* → bật bảo trì (thử đăng nhập tài khoản khác) → tắt; *An ninh & dữ liệu* → *Tạo bản sao lưu ngay*.
 
 ## 8. Giới hạn (phạm vi môn học)
 
 - Chạy trên localhost; phiên đăng nhập lưu trong bộ nhớ – khởi động lại máy chủ cần đăng nhập lại.
 - Không có máy chủ email: mã quên mật khẩu hiển thị trên màn hình và in ở console (chế độ demo).
-- Không có trang tự đăng ký: tài khoản sinh viên có sẵn trong dữ liệu mẫu; tài khoản Ban tổ chức do Đơn vị quản lý cấp.
+- Không có trang tự đăng ký: tài khoản do Quản trị hệ thống cấp (ngoài dữ liệu mẫu).
+- Phiên đăng nhập lưu trong bộ nhớ nên danh sách phiên mất khi khởi động lại máy chủ.

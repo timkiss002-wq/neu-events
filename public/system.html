@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tổng quan hệ thống – NEU Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="/img/favicon-neu.png" type="image/png">
+<link rel="stylesheet" href="/css/app.css">
+<link rel="stylesheet" href="/css/ui.css">
+<link rel="stylesheet" href="/css/enhance.css">
+<link rel="stylesheet" href="/css/system.css">
+</head>
+<body>
+
+<!-- Sidebar & header được dựng bởi /js/app.js theo tài khoản đăng nhập -->
+<aside class="sidebar" aria-label="Điều hướng chính"></aside>
+<div class="scrim" id="scrim"></div>
+<header class="header"></header>
+
+<div class="main">
+  <main class="container">
+    <div class="crumbs">NEU Events <span>/</span> Quản trị hệ thống <span>/</span> <b>Tổng quan hệ thống</b></div>
+    <div class="page-head">
+      <div>
+        <h1>Tổng quan hệ thống</h1>
+        <p>Theo dõi tình trạng máy chủ, cơ sở dữ liệu, tài khoản và các sự kiện an ninh của hệ thống.</p>
+      </div>
+      <div class="head-actions">
+        <button class="btn-outline" id="refreshBtn">Làm mới</button>
+        <a class="btn-primary" href="/security.html#backup">Sao lưu dữ liệu</a>
+      </div>
+    </div>
+    <div id="banner"></div>
+    <section class="stats" id="stats"><div class="loading"><span class="spinner"></span></div></section>
+
+    <div class="grid-2 sec-gap">
+      <section class="card">
+        <h3>Hạ tầng máy chủ</h3>
+        <div class="hint">Thông tin tiến trình Node.js đang chạy hệ thống.</div>
+        <dl class="kv" id="server"></dl>
+      </section>
+      <section class="card">
+        <h3>Dữ liệu &amp; lưu trữ</h3>
+        <div class="hint">Cơ sở dữ liệu SQLite, file tải lên và bản sao lưu.</div>
+        <dl class="kv" id="storage"></dl>
+      </section>
+    </div>
+
+    <div class="grid-2 sec-gap">
+      <section class="card">
+        <h3>Tài khoản theo vai trò</h3>
+        <div class="hint">Số tài khoản của từng phân hệ.</div>
+        <div class="table-wrap">
+          <table class="tbl">
+            <thead><tr><th>Vai trò</th><th>Tổng</th><th>Đang hoạt động</th><th>Đã khóa</th></tr></thead>
+            <tbody id="roles"></tbody>
+          </table>
+        </div>
+        <div style="margin-top:12px"><a class="link" href="/users.html">Quản lý người dùng &amp; phân quyền →</a></div>
+      </section>
+      <section class="card">
+        <h3>Sự kiện an ninh gần đây</h3>
+        <div class="hint">Đăng nhập sai, tạm khóa, thay đổi tài khoản và cấu hình.</div>
+        <div class="feed" id="feed"></div>
+        <div style="margin-top:8px"><a class="link" href="/security.html">Xem toàn bộ nhật ký hệ thống →</a></div>
+      </section>
+    </div>
+
+  </main>
+  <footer class="footer"></footer>
+</div>
+
+<script src="/js/app.js"></script>
+<script src="/js/pages/system.js"></script>
+</body>
+</html>

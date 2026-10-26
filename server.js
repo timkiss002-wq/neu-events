@@ -9,6 +9,7 @@ const crypto = require('crypto');
 const { open, q } = require('./db/database');
 const { HttpError } = require('./lib/util');
 const { loadUser, requireAuth, requireRole } = require('./middleware/auth');
+const settings = require('./lib/settings');
 
 const PORT = Number(process.env.PORT) || 3000;
 const app = express();
@@ -22,6 +23,7 @@ if (!q.get('SELECT COUNT(*) n FROM users').n) {
 
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));
+app.set('trust proxy', 'loopback');
 app.use(session({
   name: 'neu.sid',
   secret: process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex'),
@@ -40,25 +42,19 @@ app.use('/api/moderation', require('./routes/moderation'));
 app.use('/api/reviews', require('./routes/reviews'));
 app.use('/api/reports', require('./routes/reports'));
 app.use('/api/admin', require('./routes/admin'));
-
-// Cấp chương trình và điểm hoạt động mặc định tương ứng
-const LEVELS = [
-  { key: 'truong', name: 'Cấp Trường', points: 5 },
-  { key: 'khoa', name: 'Cấp Khoa/Viện', points: 3 },
-  { key: 'clb', name: 'Cấp Chi đoàn/CLB', points: 2 },
-];
+app.use('/api/system', require('./routes/system'));
 
 // Danh mục dùng cho form, bộ lọc
 app.get('/api/meta', requireAuth, (_req, res) => {
   res.json({
     units: q.all('SELECT id, name, short_name FROM units ORDER BY name'),
     categories: q.all('SELECT id, name, color FROM categories ORDER BY id'),
-    levels: LEVELS,
+    levels: settings.levels(), // cấp chương trình & điểm mặc định theo cấu hình hệ thống
   });
 });
 
-// Lịch sử thao tác toàn hệ thống (quản lý)
-app.get('/api/audit', requireRole('admin'), (req, res) => {
+// Lịch sử thao tác toàn hệ thống (đơn vị quản lý, quản trị hệ thống)
+app.get('/api/audit', requireRole('admin', 'sysadmin'), (req, res) => {
   const rows = q.all(`SELECT a.*, u.full_name AS actor_name FROM audit_logs a LEFT JOIN users u ON u.id = a.actor_id
                       ORDER BY a.id DESC LIMIT ?`, Math.min(500, Number(req.query.limit) || 100));
   res.json({ logs: rows });
@@ -85,5 +81,5 @@ app.listen(PORT, () => {
   console.log('\n  NEU Events đang chạy:');
   console.log(`  ➜ Máy này:      http://localhost:${PORT}`);
   if (lan) console.log(`  ➜ Cùng mạng LAN: http://${lan.address}:${PORT}  (dùng cho điện thoại quét QR điểm danh)`);
-  console.log('  Tài khoản demo (mật khẩu 123456): 11240123 (sinh viên) • CB103 (ban tổ chức) • CB001 (quản lý)\n');
+  console.log('  Tài khoản demo (mật khẩu 123456): 11240123 (sinh viên) • cntt@neu.edu.vn (ban tổ chức) • admin@neu.edu.vn (đơn vị quản lý) • quantri@neu.edu.vn (quản trị hệ thống)\n');
 });

@@ -1,0 +1,76 @@
+/* =====================================================================
+   NEU Events – Phân hệ Quản trị hệ thống (tổng quan, người dùng, cấu hình, an ninh)
+   ===================================================================== */
+.grid-2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; }
+.grid-2 > .card { margin: 0; }
+.sec-gap { margin-top: 18px; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 14px; }
+.muted-cell { color: var(--muted); font-size: 14.5px; }
+
+/* Danh sách thông số dạng khóa – giá trị */
+.kv { display: grid; grid-template-columns: minmax(150px, 40%) 1fr; margin-top: 12px; border-top: 1px solid var(--line); }
+.kv dt, .kv dd { padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+.kv dt { color: var(--muted); }
+.kv dd { color: var(--ink); font-weight: 500; overflow-wrap: anywhere; }
+
+/* Đèn trạng thái */
+.dot-st { display: inline-flex; align-items: center; gap: 7px; font-weight: 600; }
+.dot-st::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: #1a7a43; box-shadow: 0 0 0 3px #e3f5ea; }
+.dot-st.warn::before { background: #a8690a; box-shadow: 0 0 0 3px #fdf0d8; }
+.dot-st.bad::before { background: #c23a3a; box-shadow: 0 0 0 3px #fde7e7; }
+
+/* Dòng thời gian sự kiện bảo mật */
+.feed { margin-top: 12px; display: flex; flex-direction: column; }
+.feed > div { display: grid; grid-template-columns: 28px 1fr; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+.feed > div:last-child { border-bottom: 0; }
+.feed .ic { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; background: var(--blue-soft); color: var(--blue); }
+.feed .ic.red { background: #fde7e7; color: #c23a3a; }
+.feed .ic.amber { background: #fdf0d8; color: #a8690a; }
+.feed .ic svg { width: 15px; height: 15px; }
+.feed small { display: block; color: var(--muted); font-size: 13.5px; margin-top: 3px; }
+
+/* Banner bảo trì */
+.banner { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 10px; margin-bottom: 18px; font-size: 15px; line-height: 1.5; }
+.banner.amber { background: #fdf0d8; color: #7a4c06; border: 1px solid #f4dcae; }
+.banner svg { width: 18px; height: 18px; margin-top: 2px; }
+
+/* Ma trận phân quyền */
+.matrix th, .matrix td { text-align: center; }
+.matrix th:first-child, .matrix td:first-child { text-align: left; }
+.matrix .mod td { background: var(--bg); font-weight: 700; color: var(--navy); text-align: left; }
+.matrix .yes { color: #1a7a43; }
+.matrix .no { color: #c4cad6; }
+.matrix svg { width: 18px; height: 18px; margin: 0 auto; }
+.role-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 14px; }
+.role-cards > div { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: 14.5px; color: var(--text); line-height: 1.5; }
+.role-cards b { display: block; color: var(--ink); font-size: 15.5px; margin: 6px 0 4px; }
+
+/* Cấu hình hệ thống */
+.set-row { display: grid; grid-template-columns: 1fr 260px; gap: 18px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.set-row:last-child { border-bottom: 0; }
+.set-row .lbl { font-size: 15.5px; font-weight: 600; color: var(--ink); }
+.set-row .help { font-size: 14px; color: var(--muted); margin-top: 4px; line-height: 1.45; }
+.set-row .meta { font-size: 13.5px; color: var(--muted); margin-top: 4px; }
+.set-row.changed .lbl::after { content: 'Chưa lưu'; margin-left: 8px; font-size: 12.5px; font-weight: 600; color: #a8690a; background: #fdf0d8; border-radius: 4px; padding: 1px 6px; }
+.save-bar { position: sticky; bottom: 0; z-index: 5; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px; margin-top: 18px; background: #fff; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 -6px 18px rgba(15,42,92,.06); }
+.save-bar .hint { margin: 0; }
+
+/* Công tắc bật / tắt */
+.switch { position: relative; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-size: 15px; }
+.switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+.switch .track { width: 42px; height: 24px; border-radius: 12px; background: #d5dbe6; position: relative; transition: background .15s; }
+.switch .track::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.2); transition: transform .15s; }
+.switch input:checked + .track { background: var(--blue); }
+.switch input:checked + .track::after { transform: translateX(18px); }
+.switch input:focus-visible + .track { box-shadow: 0 0 0 3px rgba(20,81,168,.2); }
+
+.table-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
+.form-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 14px; }
+.form-grid2 .full { grid-column: 1 / -1; }
+
+@media (max-width: 1100px) { .role-cards { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 900px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  .set-row { grid-template-columns: 1fr; gap: 8px; }
+}
+@media (max-width: 520px) { .role-cards, .form-grid2 { grid-template-columns: 1fr; } }

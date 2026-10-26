@@ -6,6 +6,7 @@ const path = require('path');
 const bcrypt = require('bcryptjs');
 const { open, close, q, DB_PATH } = require('./database');
 const { fmt } = require('../lib/util');
+const settings = require('../lib/settings');
 
 // PRNG có hạt giống để dữ liệu ổn định giữa các lần seed
 let _s = 20261019;
@@ -54,6 +55,9 @@ function seed() {
     const admin = addUser('CB001', 'admin@neu.edu.vn', 'Trần Hoài Thu', 'admin', U[1], { position: 'Chuyên viên kiểm duyệt', phone: '024 3628 0280' });
     addUser('CB002', 'quanly@neu.edu.vn', 'Nguyễn Văn Hùng', 'admin', U[1], { position: 'Trưởng phòng', phone: '024 3628 0281' });
 
+    // Quản trị hệ thống: quản lý người dùng – phân quyền, cấu hình, an toàn an ninh dữ liệu và hạ tầng
+    const sysadmin = addUser('QT001', 'quantri@neu.edu.vn', 'Phạm Quốc Việt', 'sysadmin', null, { position: 'Quản trị viên hệ thống', phone: '024 3628 0299' });
+
     // Tài khoản Ban tổ chức được cấp cho từng đơn vị (tên tài khoản = tên đơn vị, email @neu.edu.vn)
     const unitName = (i) => units[i - 1][0];
     const org = {
@@ -74,12 +78,13 @@ function seed() {
     const ten = ['Anh', 'Thu', 'Hà', 'Linh', 'Nam', 'Huy', 'Trang', 'Long', 'Mai', 'Phúc', 'Quân', 'Vy', 'Hương', 'Đức', 'Tâm', 'Ngân', 'Khoa', 'Yến'];
     const lop = ['Kinh tế học 66A', 'Logistics 66B', 'Khoa học dữ liệu 66', 'Marketing 66C', 'Tài chính 66A', 'Kế toán 66D', 'Quản trị kinh doanh 66B'];
 
-    const mainStudent = addUser('11240123', '11240123@st.neu.edu.vn', 'Nguyễn Minh Anh', 'student', null, { class_name: 'Khoa học dữ liệu 66', phone: '0912 000 123' });
-    const student2 = addUser('11244035', '11244035@st.neu.edu.vn', 'Nguyễn Thị Thu', 'student', null, { class_name: 'Logistics 66B', phone: '0912 000 435' });
+    const mainStudent = addUser('11240123', '11240123@st.neu.edu.vn', 'Thân Mậu Dũng', 'student', null, { class_name: 'Khoa học dữ liệu 66', phone: '0912 000 123' });
+    const student2 = addUser('11244035', '11244035@st.neu.edu.vn', 'Lê Văn Dũng', 'student', null, { class_name: 'Logistics 66B', phone: '0912 000 435' });
     const students = [mainStudent, student2];
     for (let i = 0; i < 118; i++) {
       const code = String(11240200 + i * 7);
-      students.push(addUser(code, `${code}@st.neu.edu.vn`, `${pick(ho)} ${pick(dem)} ${pick(ten)}`, 'student', null, { class_name: pick(lop) }));
+      const name = `${pick(ho)} ${pick(dem)} ${pick(ten)}`.replace(/Minh Anh$/, 'Minh Đức');
+      students.push(addUser(code, `${code}@st.neu.edu.vn`, name, 'student', null, { class_name: pick(lop) }));
     }
 
     // ---------- Sự kiện ----------
@@ -284,7 +289,7 @@ function seed() {
       q.run('INSERT INTO reviews (event_id,user_id,rating,comment,is_anonymous,created_at,updated_at) VALUES (?,?,?,?,?,?,?)', evs[ev].id, uid, rating, comment, rnd() < 0.2 ? 1 : 0, t, t);
     };
 
-    // Sinh viên demo chính – Nguyễn Minh Anh
+    // Sinh viên demo chính – Thân Mậu Dũng
     register('xanh', mainStudent, { attendance: 'present', checked_in_at: shift(evs.xanh.start_at, 12), method: 'code', checked_out_at: shift(evs.xanh.end_at, 5) });
     review('xanh', mainStudent, 5, 'Hoạt động ý nghĩa, mong trường tổ chức thường xuyên hơn.');
     register('python', mainStudent, { attendance: 'present', checked_in_at: shift(evs.python.start_at, -5), method: 'qr', checked_out_at: shift(evs.python.end_at, 3), out_method: 'qr' });
@@ -370,7 +375,22 @@ function seed() {
       if (e.status === 'rejected') log(admin, 'event.reject', k, 'Từ chối hồ sơ', e.review_note, e.reviewed_at);
       if (e.status === 'cancelled') log(e.by, 'event.cancel', k, 'Hủy sự kiện', e.cancel_reason, at(-1, 8, 0));
     }
+
+    // Nhật ký bảo mật & quản trị mẫu (phục vụ phân hệ Quản trị hệ thống)
+    const ulog = (actor, action, target, detail, t, entity = 'user') =>
+      q.run('INSERT INTO audit_logs (actor_id,action,entity_type,entity_id,detail,reason,created_at) VALUES (?,?,?,?,?,?,?)', actor, action, entity, target, detail, '', t);
+    ulog(sysadmin, 'auth.login', sysadmin, 'Đăng nhập (IP 127.0.0.1)', at(-3, 8, 2));
+    ulog(sysadmin, 'system.backup', null, 'Tạo bản sao lưu định kỳ cơ sở dữ liệu', at(-3, 8, 10), 'backup');
+    ulog(sysadmin, 'account.create', org.tm, 'Cấp tài khoản Ban tổ chức: Liên chi đoàn Viện Thương mại & Kinh tế quốc tế (thuongmai@neu.edu.vn)', at(-3, 8, 25));
+    ulog(sysadmin, 'system.settings', null, 'Cập nhật cấu hình: Số lần nhập sai mật khẩu trước khi tạm khóa: 3 → 5', at(-2, 9, 0), 'settings');
+    ulog(student2, 'auth.login_failed', student2, 'Đăng nhập sai mật khẩu lần 1/5 (IP 192.168.1.24)', at(-1, 21, 14));
+    ulog(student2, 'auth.login_failed', student2, 'Đăng nhập sai mật khẩu lần 2/5 (IP 192.168.1.24)', at(-1, 21, 15));
+    ulog(student2, 'auth.login', student2, 'Đăng nhập (IP 192.168.1.24)', at(-1, 21, 17));
+    ulog(mainStudent, 'auth.login', mainStudent, 'Đăng nhập (IP 127.0.0.1)', at(0, 7, 40));
+    ulog(admin, 'auth.login', admin, 'Đăng nhập (IP 127.0.0.1)', at(0, 7, 55));
+    ulog(org.cntt, 'auth.login', org.cntt, 'Đăng nhập (IP 127.0.0.1)', at(0, 8, 5));
   });
+  settings.invalidate();
 
   const counts = q.get(`SELECT (SELECT COUNT(*) FROM users) u, (SELECT COUNT(*) FROM events) e, (SELECT COUNT(*) FROM registrations) r, (SELECT COUNT(*) FROM reviews) v`);
   console.log(`✔ Đã tạo dữ liệu mẫu: ${counts.u} người dùng, ${counts.e} sự kiện, ${counts.r} lượt đăng ký, ${counts.v} đánh giá.`);
